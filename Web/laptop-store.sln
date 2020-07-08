@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL", "..\DAL\DAL.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BUS", "..\BUS\BUS.csproj", "{8B9C3E02-48F5-4D34-9C5B-486966CFED29}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{8608FC91-6C22-47A7-B9DF-D8D3C6A0A491}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +38,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{A43F1278-7458-4D8F-BC4D-8091B5F7BDEF} = {F2178778-F8EE-42F7-B922-7AF4561F3814}
 		{3D56D1F6-75CB-443C-BB50-8E71016B00B0} = {F2178778-F8EE-42F7-B922-7AF4561F3814}
+		{8B9C3E02-48F5-4D34-9C5B-486966CFED29} = {F2178778-F8EE-42F7-B922-7AF4561F3814}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7ED161BE-CF02-4C9A-B297-97BE7FF288E8}
