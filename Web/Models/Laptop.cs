@@ -14,8 +14,7 @@ namespace laptop_store.Models
         public string LaptopRAM { get; set; }
         public string LaptopStorage { get; set; }
         public string LaptopDisplay { get; set; }
-        public float LaptopWeight { get; set; }
-        public float LaptopPrice { get; set; }
+        public double LaptopPrice { get; set; }
         public int LaptopQuantity { get; set; }
         public DateTime LaptopImportDate { get; set; }
         public float LaptopDiscountPercentage { get; set; }
