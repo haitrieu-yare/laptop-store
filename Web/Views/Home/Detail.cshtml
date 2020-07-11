@@ -1,0 +1,16 @@
+﻿@model laptop_store.Models.Laptop
+@{
+    ViewData["Title"] = "Detail";
+}
+
+<h1>Detail</h1>
+<h2>@Model.LaptopID</h2>
+<h2>@Model.LaptopName</h2>
+<p>@Model.LaptopCPU</p>
+<p>@Model.LaptopGPU</p>
+<p>@Model.LaptopRAM</p>
+<p>@Model.LaptopDisplay</p>
+<p>@Model.LaptopStorage</p>
+<p>Price: @Model.LaptopPrice</p>
+<p>Discount: @Model.LaptopDiscountPercentage%</p>
+<img name="@Model.LaptopName" src="~/@Model.LaptopImage" alt="@Model.LaptopName"/>

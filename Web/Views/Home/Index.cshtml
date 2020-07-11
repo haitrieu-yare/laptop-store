@@ -1,18 +1,50 @@
-﻿@model List<string>
+﻿@model System.Data.DataTable
 @{
     ViewData["Title"] = "Home";
 }
 
 <h1>Home</h1>
 <h2>Laptop List</h2>
-<table>
-    <tr>
-        @for (int i = 0; i < Model.Count; i++)
-        {
+<form id="chooseForm" method="post" asp-controller="Home" asp-action="Detail">
+    <table>
+        <tr>
+            @for (int i = 0; i < Model.Rows.Count; i++)
+            {
             <th>
-                <img src="@Model[i]" class="img" alt="Image @(i+1)" />
+                <input type="image" name="@Model.Rows[i]["LaptopName"]" 
+                       onclick="chosenLaptop(@Model.Rows[i]["LaptopID"], '@Model.Rows[i]["LaptopPrice"]',
+                        '@Model.Rows[i]["LaptopName"]', '@Model.Rows[i]["LaptopDiscountPercentage"]', '@Model.Rows[i]["LaptopImage"]')"
+                       src="@Model.Rows[i]["LaptopImage"]" alt="@Model.Rows[i]["LaptopName"]" />
+                <p>Price: @Model.Rows[i]["LaptopPrice"]</p>
+                <p>Discount: @Model.Rows[i]["LaptopDiscountPercentage"]%</p>
+                
             </th>
-        }
-    </tr>
-</table>
+            }
+        </tr>
+    </table>
+</form>
+
+<script>
+    function chosenLaptop(laptopID, laptopPrice, laptopName, laptopDiscountPercentage, laptopImage) {
+        let form = document.getElementById("chooseForm");
+
+        let laptopIDInput = document.createElement("input");
+        laptopIDInput.innerHTML = '<input type="hidden" name="laptopID" value="' + laptopID + '" />';
+        let laptopPriceInput = document.createElement("input");
+        laptopPriceInput.innerHTML = '<input type="hidden" name="laptopPrice" value="' + laptopPrice + '" />';
+        let laptopNameInput = document.createElement("input");
+        laptopNameInput.innerHTML = '<input type="hidden" name="laptopName" value="' + laptopName + '" />';
+        let laptopDiscountPercentageInput = document.createElement("input");
+        laptopDiscountPercentageInput.innerHTML = '<input type="hidden" name="laptopDiscountPercentage" value="' + laptopDiscountPercentage + '" />';
+        let laptopImageInput = document.createElement("input");
+        laptopImageInput.innerHTML = '<input type="hidden" name="laptopImage" value="' + laptopImage + '" />';
+
+        form.appendChild(laptopIDInput);
+        form.appendChild(laptopPriceInput);
+        form.appendChild(laptopNameInput);
+        form.appendChild(laptopDiscountPercentageInput);
+        form.appendChild(laptopImageInput);
+    }
+</script>
+
 

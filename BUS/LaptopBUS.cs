@@ -1,15 +1,20 @@
 ﻿using DAL;
 using System;
 using System.Collections.Generic;
+using System.Data;
 
 namespace BUS
 {
     public class LaptopBUS
     {
-        public List<string> GetLaptopImage()
+        private readonly LaptopDAL laptopDAL = new LaptopDAL();
+        public DataTable GetLaptopPreviewInfo()
         {
-            LaptopDAL laptopDAL = new LaptopDAL();
-            return laptopDAL.GetLaptopImage();
+            return laptopDAL.GetLaptopPreviewInfo();
+        }
+        public DataTable GetLaptopDetail(int laptopID)
+        {
+            return laptopDAL.GetLaptopDetail(laptopID);
         }
     }
 }

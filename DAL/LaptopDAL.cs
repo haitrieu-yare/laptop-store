@@ -8,23 +8,19 @@ namespace DAL
 {
     public class LaptopDAL : DBConnect
     {
-        // GetLaptopImage
-        public List<string> GetLaptopImage()
+        // Get Laptop Preview Info
+        public DataTable GetLaptopPreviewInfo()
         {
-            List<string> ImageList = new List<string>();
-            string SQL = "Select LaptopImage From tblLaptop";
+            DataTable previewInfo = new DataTable();
+            string SQL = "Select LaptopID, LaptopName, LaptopPrice, LaptopDiscountPercentage, LaptopImage From tblLaptop";
             try
             {
-                SqlCommand cmd = new SqlCommand(SQL, _conn);
+                SqlDataAdapter adapter = new SqlDataAdapter(SQL, _conn);
                 if (_conn.State == ConnectionState.Closed)
                 {
                     _conn.Open();
                 }
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    ImageList.Add((string)reader["LaptopImage"]);
-                }
+                adapter.Fill(previewInfo);
             }
             catch (Exception ex)
             {
@@ -33,7 +29,32 @@ namespace DAL
             {
                 _conn.Close();
             }
-            return ImageList;
+            return previewInfo;
+        }
+        // Get Laptop Detail
+        public DataTable GetLaptopDetail(int laptopID)
+        {
+            DataTable laptopDetail = new DataTable();
+            string SQL = "Select LaptopCPU, LaptopGPU, LaptopRAM, LaptopStorage, LaptopDisplay From tblLaptop Where LaptopID=@ID";
+            try
+            {
+                SqlCommand cmd = new SqlCommand(SQL, _conn);
+                cmd.Parameters.Add("@ID", SqlDbType.Int).Value = laptopID;
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                if (_conn.State == ConnectionState.Closed)
+                {
+                    _conn.Open();
+                }
+                adapter.Fill(laptopDetail);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            } finally
+            {
+                _conn.Close();
+            }
+            return laptopDetail;
         }
     } // End Class
 } // End Namespace
