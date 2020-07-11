@@ -5,6 +5,6 @@
 > BLL - BUS folder  
 > DAL - DAL folder  
 # database
-> Database file - DBscript.sql
+> Database file - LaptopStoreDatabase.bak
 # license
 > MIT - LICENSE.md file
