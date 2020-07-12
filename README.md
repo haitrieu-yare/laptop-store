@@ -1,10 +1,10 @@
-# laptop-store
+# Laptop Store
 > Laptop Store Web Application
-# 3 layers architecture
-> GUI - Web folder  
-> BLL - BUS folder  
-> DAL - DAL folder  
-# database
-> Database file - LaptopStoreDatabase.bak
-# license
-> MIT - LICENSE.md file
+# Three layers architecture
+> GUI - [Web Folder](/Web)
+> BLL - [BUS Folder](/BUS)
+> DAL - [DAL Folder](/DAL)
+# Database
+> Database File - [LaptopStoreDatabase.bak](/LaptopStoreDatabase.bak)
+# License
+> [MIT](/LICENSE.md)
