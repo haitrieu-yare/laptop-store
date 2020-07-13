@@ -2,7 +2,11 @@
 @{
     ViewData["Title"] = "Detail";
     double price = Model.LaptopPrice;
-    string priceString;
+    string priceString = price.ToString();
+    for (int j = priceString.Length - 3; j > 0; j -= 3)
+    {
+        priceString = priceString.Insert(j, ".");
+    }
 }
 
 <h1>@Model.LaptopName</h1>
@@ -23,15 +27,17 @@
             @if (Model.LaptopDiscountPercentage != 0)
             {
                 <p>Discount: @Model.LaptopDiscountPercentage%</p>
-                priceString = price.ToString("00\\.000\\.000");
                 <p>Old Price: <s>@priceString₫</s></p>
                 price = (Math.Round(Model.LaptopPrice * ((100 - Model.LaptopDiscountPercentage) / 100)));
-                priceString = price.ToString("00\\.000\\.000");
+                priceString = price.ToString();
+                for (int j = priceString.Length - 3; j > 0; j -= 3)
+                {
+                    priceString = priceString.Insert(j, ".");
+                }
                 <p class="product_sale_price">New Price: @priceString₫</p>
             }
             else
             {
-                priceString = price.ToString("00\\.000\\.000");
                 <p class="product_sale_price">Price: @priceString₫</p>
             }
         </div>
