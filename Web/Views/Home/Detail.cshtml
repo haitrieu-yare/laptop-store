@@ -1,10 +1,11 @@
 ﻿@model laptop_store.Models.Laptop
 @{
     ViewData["Title"] = "Detail";
+    double price = Model.LaptopPrice;
+    string priceString;
 }
 
 <h1>@Model.LaptopName</h1>
-@*d-flex flex-row*@
 <div class="row">
     <div class="shadow-sm mb-4 mr-5 col-sm">
         <img class="bd-placeholder-img card-img-top img-fluid" width="400" height="400"
@@ -22,12 +23,16 @@
             @if (Model.LaptopDiscountPercentage != 0)
             {
                 <p>Discount: @Model.LaptopDiscountPercentage%</p>
-                <p>Old Price: <s>@Model.LaptopPrice</s></p>
-                <p class="product_sale_price">New Price: @(Math.Round(Model.LaptopPrice * ((100 - Model.LaptopDiscountPercentage) / 100)))₫</p>
+                priceString = price.ToString("00\\.000\\.000");
+                <p>Old Price: <s>@priceString₫</s></p>
+                price = (Math.Round(Model.LaptopPrice * ((100 - Model.LaptopDiscountPercentage) / 100)));
+                priceString = price.ToString("00\\.000\\.000");
+                <p class="product_sale_price">New Price: @priceString₫</p>
             }
             else
             {
-                <p class="product_sale_price">Price: @Model.LaptopPrice₫</p>
+                priceString = price.ToString("00\\.000\\.000");
+                <p class="product_sale_price">Price: @priceString₫</p>
             }
         </div>
         <div class="shadow-sm px-3 py-3 d-flex flex-column">
