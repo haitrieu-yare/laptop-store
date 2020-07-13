@@ -9,13 +9,20 @@
             {
                 <div class="col-md-4">
                     <div class="card mb-4 shadow-sm">
-                        <input class="bd-placeholder-img card-img-top" width="300" height="300" type="image" name="@Model.Rows[i]["LaptopName"]"
-                               onclick="chosenLaptop(@Model.Rows[i]["LaptopID"], '@Model.Rows[i]["LaptopPrice"]',
-                            '@Model.Rows[i]["LaptopName"]', '@Model.Rows[i]["LaptopDiscountPercentage"]', '@Model.Rows[i]["LaptopImage"]')"
-                               src="@Model.Rows[i]["LaptopImage"]" alt="@Model.Rows[i]["LaptopName"]" />
+                        <div class="laptop-image">
+                            <input class="bd-placeholder-img card-img-top img-fluid" width="300" height="300" type="image" name="@Model.Rows[i]["LaptopName"]"
+                                   onclick="chosenLaptop(@Model.Rows[i]["LaptopID"], '@Model.Rows[i]["LaptopPrice"]', '@Model.Rows[i]["LaptopName"]',
+                                                        '@Model.Rows[i]["LaptopDiscountPercentage"]', '@Model.Rows[i]["LaptopImage"]')"
+                                   src="@Model.Rows[i]["LaptopImage"]" alt="@Model.Rows[i]["LaptopName"]" />
+                            @if ((double)@Model.Rows[i]["LaptopDiscountPercentage"] != 0)
+                            {
+                                <p class="discount-badge">-@Model.Rows[i]["LaptopDiscountPercentage"]%</p>
+                            }
+                        </div>
                         <div class="card-body">
-                            <p class="card-text d-flex justify-content-center">Price: @Model.Rows[i]["LaptopPrice"]</p>
-                            <p class="card-text d-flex justify-content-center">Discount: @Model.Rows[i]["LaptopDiscountPercentage"]%</p>
+                            <p class="card-text d-flex justify-content-center product_sale_price">
+                                Price: @(Math.Round((double)Model.Rows[i]["LaptopPrice"] * ((100 - (double)Model.Rows[i]["LaptopDiscountPercentage"]) / 100)))₫
+                            </p>
                         </div>
                     </div>
                 </div>

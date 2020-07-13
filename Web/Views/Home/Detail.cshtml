@@ -4,21 +4,34 @@
 }
 
 <h1>@Model.LaptopName</h1>
+@*d-flex flex-row*@
 <div class="row">
-    <div class="col-md-4 d-flex">
-        <div class="mb-4 shadow-sm mr-5">
-            <img name="@Model.LaptopName" src="~/@Model.LaptopImage" alt="@Model.LaptopName" />
-        </div>
-        <div class="mb-4 shadow-sm ml-5 px-3 py-3">
+    <div class="shadow-sm mb-4 mr-5 col-sm">
+        <img class="bd-placeholder-img card-img-top img-fluid" width="400" height="400"
+             name="@Model.LaptopName" src="~/@Model.LaptopImage" alt="@Model.LaptopName" />
+    </div>
+    <div class="mb-4 mr-5 col-sm">
+        <div class="shadow-sm mb-4 px-3 py-3 d-flex flex-column">
             <p>CPU: @Model.LaptopCPU</p>
             <p>GPU: @Model.LaptopGPU</p>
             <p>RAM: @Model.LaptopRAM</p>
             <p>Display: @Model.LaptopDisplay</p>
             <p>Storage: @Model.LaptopStorage</p>
         </div>
-        <div class="mb-4 shadow-sm ml-5 px-3 py-3">
-            <p>Price: @Model.LaptopPrice</p>
-            <p>Discount: @Model.LaptopDiscountPercentage%</p>
+        <div class="shadow-sm mb-4 px-3 py-3 d-flex flex-column">
+            @if (Model.LaptopDiscountPercentage != 0)
+            {
+                <p>Discount: @Model.LaptopDiscountPercentage%</p>
+                <p>Old Price: <s>@Model.LaptopPrice</s></p>
+                <p class="product_sale_price">New Price: @(Math.Round(Model.LaptopPrice * ((100 - Model.LaptopDiscountPercentage) / 100)))₫</p>
+            }
+            else
+            {
+                <p class="product_sale_price">Price: @Model.LaptopPrice₫</p>
+            }
+        </div>
+        <div class="shadow-sm px-3 py-3 d-flex flex-column">
+            <p>Add to cart</p>
         </div>
     </div>
 </div>

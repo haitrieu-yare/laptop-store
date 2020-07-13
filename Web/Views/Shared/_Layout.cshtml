@@ -12,11 +12,28 @@
 
     <title>@ViewData["Title"]</title>
     <style>
-        table, th, td {
-            border: solid 1px #DDD;
-            border-collapse: collapse;
-            padding: 2px 3px;
+        .laptop-image {
+            position: relative;
+            padding-top: 20px;
+            display: inline-block;
+        }
+
+        .discount-badge {
+            position: absolute;
+            right: -20px;
+            top: 10px;
+            background: red;
             text-align: center;
+            border-radius: 30px 30px 30px 30px;
+            color: white;
+            padding: 5px 10px;
+            font-size: 25px;
+        }
+
+        .product_sale_price {
+            font-size: 30px;
+            color: #e61010;
+            font-weight: 700;
         }
     </style>
 </head>
@@ -24,7 +41,7 @@
     <header>
         <div class="navbar navbar-dark bg-dark shadow">
             <div class="container d-flex">
-                <a href="#" class="navbar-brand">
+                <a href="/Home" class="navbar-brand">
                     <strong>Universe Store</strong>
                 </a>
                 <div class="navbar-nav d-flex flex-row ml-auto">
