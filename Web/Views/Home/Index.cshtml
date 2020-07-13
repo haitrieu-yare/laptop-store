@@ -20,9 +20,11 @@
                             }
                         </div>
                         <div class="card-body">
-                            <p class="card-text d-flex justify-content-center product_sale_price">
-                                Price: @(Math.Round((double)Model.Rows[i]["LaptopPrice"] * ((100 - (double)Model.Rows[i]["LaptopDiscountPercentage"]) / 100)))₫
-                            </p>
+                            @{
+                                double price = Math.Round((double)Model.Rows[i]["LaptopPrice"] * ((100 - (double)Model.Rows[i]["LaptopDiscountPercentage"]) / 100));
+                                string priceString = price.ToString("00\\.000\\.000");
+                            }
+                            <p class="card-text d-flex justify-content-center product_sale_price">@priceString₫</p>
                         </div>
                     </div>
                 </div>
