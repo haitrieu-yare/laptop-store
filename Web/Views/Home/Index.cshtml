@@ -3,7 +3,7 @@
     ViewData["Title"] = "Home";
 }
 
-<form id="chooseForm" method="post" asp-controller="Home" asp-action="Detail">
+<form method="post" asp-controller="Home" asp-action="Detail">
         <div class="row">
             @for (int i = 0; i < Model.Rows.Count; i++)
             {
@@ -25,24 +25,11 @@
 
 <script>
     function chosenLaptop(laptopID, laptopPrice, laptopName, laptopDiscountPercentage, laptopImage) {
-        let form = document.getElementById("chooseForm");
-
-        let laptopIDInput = document.createElement("input");
-        laptopIDInput.innerHTML = '<input type="hidden" name="laptopID" value="' + laptopID + '" />';
-        let laptopPriceInput = document.createElement("input");
-        laptopPriceInput.innerHTML = '<input type="hidden" name="laptopPrice" value="' + laptopPrice + '" />';
-        let laptopNameInput = document.createElement("input");
-        laptopNameInput.innerHTML = '<input type="hidden" name="laptopName" value="' + laptopName + '" />';
-        let laptopDiscountPercentageInput = document.createElement("input");
-        laptopDiscountPercentageInput.innerHTML = '<input type="hidden" name="laptopDiscountPercentage" value="' + laptopDiscountPercentage + '" />';
-        let laptopImageInput = document.createElement("input");
-        laptopImageInput.innerHTML = '<input type="hidden" name="laptopImage" value="' + laptopImage + '" />';
-
-        form.appendChild(laptopIDInput);
-        form.appendChild(laptopPriceInput);
-        form.appendChild(laptopNameInput);
-        form.appendChild(laptopDiscountPercentageInput);
-        form.appendChild(laptopImageInput);
+        $('form').append('<input type="hidden" name="laptopID" value="' + laptopID + '" />');
+        $('form').append('<input type="hidden" name="laptopPrice" value="' + laptopPrice + '" />');
+        $('form').append('<input type="hidden" name="laptopName" value="' + laptopName + '" />');
+        $('form').append('<input type="hidden" name="laptopDiscountPercentage" value="' + laptopDiscountPercentage + '" />');
+        $('form').append('<input type="hidden" name="laptopImage" value="' + laptopImage + '" />');
     }
 </script>
 
