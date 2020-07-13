@@ -3,25 +3,24 @@
     ViewData["Title"] = "Home";
 }
 
-<h1>Home</h1>
-<h2>Laptop List</h2>
 <form id="chooseForm" method="post" asp-controller="Home" asp-action="Detail">
-    <table>
-        <tr>
+        <div class="row">
             @for (int i = 0; i < Model.Rows.Count; i++)
             {
-            <th>
-                <input type="image" name="@Model.Rows[i]["LaptopName"]" 
-                       onclick="chosenLaptop(@Model.Rows[i]["LaptopID"], '@Model.Rows[i]["LaptopPrice"]',
-                        '@Model.Rows[i]["LaptopName"]', '@Model.Rows[i]["LaptopDiscountPercentage"]', '@Model.Rows[i]["LaptopImage"]')"
-                       src="@Model.Rows[i]["LaptopImage"]" alt="@Model.Rows[i]["LaptopName"]" />
-                <p>Price: @Model.Rows[i]["LaptopPrice"]</p>
-                <p>Discount: @Model.Rows[i]["LaptopDiscountPercentage"]%</p>
-                
-            </th>
+                <div class="col-md-4">
+                    <div class="card mb-4 shadow-sm">
+                        <input class="bd-placeholder-img card-img-top" width="300" height="300" type="image" name="@Model.Rows[i]["LaptopName"]"
+                               onclick="chosenLaptop(@Model.Rows[i]["LaptopID"], '@Model.Rows[i]["LaptopPrice"]',
+                            '@Model.Rows[i]["LaptopName"]', '@Model.Rows[i]["LaptopDiscountPercentage"]', '@Model.Rows[i]["LaptopImage"]')"
+                               src="@Model.Rows[i]["LaptopImage"]" alt="@Model.Rows[i]["LaptopName"]" />
+                        <div class="card-body">
+                            <p class="card-text d-flex justify-content-center">Price: @Model.Rows[i]["LaptopPrice"]</p>
+                            <p class="card-text d-flex justify-content-center">Discount: @Model.Rows[i]["LaptopDiscountPercentage"]%</p>
+                        </div>
+                    </div>
+                </div>
             }
-        </tr>
-    </table>
+        </div>
 </form>
 
 <script>
