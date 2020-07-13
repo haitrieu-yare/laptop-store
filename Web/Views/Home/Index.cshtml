@@ -22,7 +22,11 @@
                         <div class="card-body">
                             @{
                                 double price = Math.Round((double)Model.Rows[i]["LaptopPrice"] * ((100 - (double)Model.Rows[i]["LaptopDiscountPercentage"]) / 100));
-                                string priceString = price.ToString("00\\.000\\.000");
+                                string priceString = price.ToString();
+                                for (int j = priceString.Length-3; j > 0; j-=3)
+                                {
+                                    priceString = priceString.Insert(j, ".");
+                                }
                             }
                             <p class="card-text d-flex justify-content-center product_sale_price">@priceString₫</p>
                         </div>
