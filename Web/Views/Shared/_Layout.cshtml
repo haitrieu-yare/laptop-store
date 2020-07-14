@@ -6,10 +6,9 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+    <link rel="icon" href="/favicon-32x32.png">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-
     <title>@ViewData["Title"]</title>
     <style>
         .laptop-image {
@@ -17,7 +16,6 @@
             padding-top: 20px;
             display: inline-block;
         }
-
         .discount-badge {
             position: absolute;
             right: -20px;
@@ -29,7 +27,6 @@
             padding: 5px 10px;
             font-size: 25px;
         }
-
         .product_sale_price {
             font-size: 30px;
             color: #e61010;
@@ -40,24 +37,31 @@
 <body>
     <header>
         <div class="navbar navbar-dark bg-dark shadow">
-            <div class="container d-flex">
+            <div class="container">
                 <a href="/Home" class="navbar-brand">
-                    <strong>Universe Store</strong>
+                    <strong>Sky Store</strong>
                 </a>
                 <div class="navbar-nav d-flex flex-row ml-auto">
-                    <a href="#" class="nav-item btn btn-primary my-2 mr-1">Sign In</a>
-                    <a href="#" class="nav-item btn btn-secondary my-2">Sign Up</a>
+                    @if (string.IsNullOrEmpty((string)ViewData["CurrentUser"]))
+                    {
+                        <a href="/Home/SignIn" class="nav-item btn btn-primary my-2 mr-2">Sign In</a>
+                        <a href="/Home/SignUp" class="nav-item btn btn-secondary my-2">Sign Up</a>
+                    }
+                    else
+                    {
+                        <div class="text-white navbar-tex">Welcome, @ViewData["CurrentUser"]</div>
+                    }
                 </div>
             </div>
         </div>
     </header>
-    <div class="album py-5 bg-light">
+    <div class="album bg-light py-5">
         <div class="container">
             @RenderBody()
         </div>
     </div>
-    <footer class="text-muted">
-        <div class="container">
+    <footer>
+        <div class="container my-3">
             <p class="float-right">
                 <a href="#">Back to top</a>
             </p>
