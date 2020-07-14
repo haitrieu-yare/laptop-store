@@ -97,7 +97,11 @@ namespace laptop_store.Controllers
                     HttpContext.Session.SetString("CurrentUserPhone", user.UserPhone);
                 }
             }
-            catch (Exception ex)
+            catch (IndexOutOfRangeException)
+            {
+                string error = "Wrong email or password";
+                return View("SignIn", error);
+            } catch (Exception ex)
             {
                 throw ex;
             }
