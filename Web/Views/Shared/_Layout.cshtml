@@ -42,14 +42,17 @@
                     <strong>Sky Store</strong>
                 </a>
                 <div class="navbar-nav d-flex flex-row ml-auto">
-                    @if (string.IsNullOrEmpty((string)ViewData["CurrentUser"]))
+                    @if (string.IsNullOrEmpty((string)ViewData["CurrentUserName"]))
                     {
                         <a href="/Home/SignIn" class="nav-item btn btn-primary my-2 mr-2">Sign In</a>
                         <a href="/Home/SignUp" class="nav-item btn btn-secondary my-2">Sign Up</a>
                     }
                     else
                     {
-                        <div class="text-white navbar-tex">Welcome, @ViewData["CurrentUser"]</div>
+                        <div class="text-white navbar-text mr-2">Welcome, @ViewData["CurrentUserName"]</div>
+                        <form method="post" asp-controller="Home" asp-action="SignOut">
+                            <input class="btn btn-danger" type="submit" value="Sign Out" />
+                        </form>
                     }
                 </div>
             </div>

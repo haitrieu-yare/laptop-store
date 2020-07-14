@@ -12,7 +12,7 @@ namespace DAL
         public DataTable SignIn(string email, string password)
         {
             DataTable userDetail = new DataTable();
-            String SQL = "Select UserID, UserName, UserRole, UserAddress, UserPhone From tblUser Where UserEmail=@Email AND UserPassword=@Password";
+            String SQL = "Select UserName, UserRole, UserAddress, UserPhone From tblUser Where UserEmail=@Email AND UserPassword=@Password";
             try
             {
                 if (_conn.State == ConnectionState.Closed)

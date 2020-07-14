@@ -14,13 +14,15 @@ namespace laptop_store.Controllers
     {
         private readonly LaptopBUS laptopBUS = new LaptopBUS();
         private readonly UserBUS userBUS = new UserBUS();
+        private void CheckSession()
+        {
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("CurrentUserName")))
+                ViewData["CurrentUserName"] = HttpContext.Session.GetString("CurrentUserName");
+        }
         public IActionResult Index()
         {
             DataTable laptopPreviewInfo = laptopBUS.GetLaptopPreviewInfo();
-            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("IsLogin")))
-            {
-                ViewData["CurrentUser"] = HttpContext.Session.GetString("CurrentUserName");
-            }
+            CheckSession();
             return View(laptopPreviewInfo);
         }
         [HttpPost]
@@ -29,10 +31,7 @@ namespace laptop_store.Controllers
             Laptop requiredLaptop;
             try
             {
-                if (!string.IsNullOrEmpty(HttpContext.Session.GetString("IsLogin")))
-                {
-                    ViewData["CurrentUser"] = HttpContext.Session.GetString("CurrentUserName");
-                }
+                CheckSession();
                 int laptopID = int.Parse(HttpContext.Request.Form["laptopID"]);
                 DataTable laptopDetailTable = laptopBUS.GetLaptopDetail(laptopID);
                 requiredLaptop = new Laptop()
@@ -61,11 +60,14 @@ namespace laptop_store.Controllers
         }
         public IActionResult SignIn()
         {
-            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("IsLogin")))
-            {
-                return RedirectToAction("Index");
-            }
+            CheckSession();
             return View();
+        }
+        [HttpPost]
+        public IActionResult SignOut()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index");
         }
         [HttpPost]
         public IActionResult CheckSignIn()
@@ -79,20 +81,31 @@ namespace laptop_store.Controllers
                 user = new User()
                 {
                     UserEmail = email,
-                    UserID = (int)userDetail.Rows[0]["UserID"],
                     UserName = (string)userDetail.Rows[0]["UserName"],
                     UserAddress = (string)userDetail.Rows[0]["UserAddress"],
                     UserPhone = (string)userDetail.Rows[0]["UserPhone"],
                     UserRole = (string)userDetail.Rows[0]["UserRole"]
                 };
                 HttpContext.Session.SetString("CurrentUserName", user.UserName);
-                HttpContext.Session.SetString("IsLogin", "True");
+                HttpContext.Session.SetString("CurrentUserRole", user.UserRole);
+                if (string.IsNullOrEmpty(user.UserAddress))
+                {
+                    HttpContext.Session.SetString("CurrentUserAddress", user.UserAddress);
+                }
+                if (string.IsNullOrEmpty(user.UserPhone))
+                {
+                    HttpContext.Session.SetString("CurrentUserPhone", user.UserPhone);
+                }
             }
             catch (Exception ex)
             {
                 throw ex;
             }
             return RedirectToAction("Index");
+        }
+        public IActionResult Profile()
+        {
+            return View();
         }
     }
 }
