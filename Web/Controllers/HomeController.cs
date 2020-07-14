@@ -13,6 +13,7 @@ namespace laptop_store.Controllers
     public class HomeController : Controller
     {
         private readonly LaptopBUS laptopBUS = new LaptopBUS();
+        private readonly UserBUS userBUS = new UserBUS();
         public IActionResult Index()
         {
             DataTable laptopPreviewInfo = laptopBUS.GetLaptopPreviewInfo();
@@ -74,7 +75,7 @@ namespace laptop_store.Controllers
             {
                 string email = HttpContext.Request.Form["Email"];
                 string password = HttpContext.Request.Form["Password"];
-                DataTable userDetail = laptopBUS.SignIn(email, password);
+                DataTable userDetail = userBUS.SignIn(email, password);
                 user = new User()
                 {
                     UserEmail = email,
