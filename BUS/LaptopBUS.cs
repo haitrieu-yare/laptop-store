@@ -16,5 +16,9 @@ namespace BUS
         {
             return laptopDAL.GetLaptopDetail(laptopID);
         }
+        public DataTable SignIn(string email, string password)
+        {
+            return laptopDAL.SignIn(email, password);
+        }
     }
 }

@@ -18,6 +18,9 @@ namespace laptop_store
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc(); // Allow program to use MVC
+            services.AddSession(options => {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -28,6 +31,7 @@ namespace laptop_store
                 app.UseDeveloperExceptionPage();
             }
             app.UseStaticFiles(); // Allows program to use static files (html, css, js...)
+            app.UseSession();
             app.UseRouting();
             app.UseEndpoints(endpoints =>
             {
