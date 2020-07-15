@@ -50,9 +50,9 @@
                     else
                     {
                         <div class="text-white navbar-text mr-2">Welcome, @ViewData["CurrentUserName"]</div>
-                        <a href="/Home/Profile" class="nav-item btn btn-primary mr-2">Profile</a>
+                        <a href="/Home/Profile" class="nav-item btn btn-primary mr-2 d-flex align-items-center">Profile</a>
                         <form method="post" asp-controller="Home" asp-action="SignOut">
-                            <input class="nav-item btn btn-danger" type="submit" value="Sign Out" />
+                            <input class="nav-item btn btn-danger form-control-lg" type="submit" value="Sign Out" />
                         </form>
                     }
                 </div>
