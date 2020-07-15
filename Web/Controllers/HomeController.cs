@@ -72,32 +72,32 @@ namespace laptop_store.Controllers
         [HttpPost]
         public IActionResult CheckSignIn()
         {
-            User user;
             try
             {
                 string email = HttpContext.Request.Form["Email"];
                 string password = HttpContext.Request.Form["Password"];
                 DataTable userDetail = userBUS.SignIn(email, password);
-                user = new User()
+                #region CheckNullAddressAndPhone
+                if (userDetail.Rows[0]["UserAddress"].GetType().ToString().Contains("DBNull"))
                 {
-                    UserEmail = email,
-                    UserName = (string)userDetail.Rows[0]["UserName"],
-                    UserAddress = (string)userDetail.Rows[0]["UserAddress"],
-                    UserPhone = (string)userDetail.Rows[0]["UserPhone"],
-                    UserRole = (string)userDetail.Rows[0]["UserRole"]
-                };
-                HttpContext.Session.SetString("CurrentUserName", user.UserName);
-                HttpContext.Session.SetString("CurrentUserRole", user.UserRole);
-                if (string.IsNullOrEmpty(user.UserAddress))
+                    HttpContext.Session.SetString("CurrentUserAddress", "No Information");
+                } else
                 {
-                    HttpContext.Session.SetString("CurrentUserAddress", user.UserAddress);
+                    HttpContext.Session.SetString("CurrentUserAddress", (string)userDetail.Rows[0]["UserAddress"]);
                 }
-                if (string.IsNullOrEmpty(user.UserPhone))
+                if (userDetail.Rows[0]["UserPhone"].GetType().ToString().Contains("DBNull"))
                 {
-                    HttpContext.Session.SetString("CurrentUserPhone", user.UserPhone);
+                    HttpContext.Session.SetString("CurrentUserPhone", "No Information");
+                } else
+                {
+                    HttpContext.Session.SetString("CurrentUserPhone", (string)userDetail.Rows[0]["UserPhone"]);
                 }
+                #endregion CheckNullAddressAndPhone
+                HttpContext.Session.SetString("CurrentUserName", (string)userDetail.Rows[0]["UserName"]);
+                HttpContext.Session.SetString("CurrentUserRole", (string)userDetail.Rows[0]["UserRole"]);
+                
             }
-            catch (IndexOutOfRangeException)
+            catch (IndexOutOfRangeException) //Check Sai Email & Password
             {
                 string error = "Wrong email or password";
                 return View("SignIn", error);
