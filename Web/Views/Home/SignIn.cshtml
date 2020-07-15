@@ -3,17 +3,17 @@
     ViewData["Title"] = "SignIn";
 }
 
-    <form class="form-signin" method="post" asp-controller="Home" asp-action="CheckSignIn">
-        <img class="mb-4" src="/android-chrome-512x512.png" alt="" width="72" height="72">
-        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-        <input type="email" name="Email" class="form-control my-2" placeholder="Email address" required autofocus>
-        <input type="password" name="Password" class="form-control my-2" placeholder="Password" required>
-        @if (!string.IsNullOrEmpty(Model))
+<form class="form-signin" method="post" asp-controller="Home" asp-action="CheckSignIn">
+    <img class="mb-4" src="/android-chrome-512x512.png" alt="" width="72" height="72">
+    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+    <input type="email" name="Email" class="form-control my-2" placeholder="Email address" required autofocus>
+    <input type="password" name="Password" class="form-control my-2" placeholder="Password" required>
+    @if (!string.IsNullOrEmpty(Model))
+    {
+        if (Model.Length != 0)
         {
-            if (Model.Length != 0)
-            {
-                <div class="alert alert-danger" role="alert">@Model</div>
-            }
+            <div class="alert alert-danger" role="alert">@Model</div>
         }
-        <button class="btn btn-lg btn-primary btn-block my-2" type="submit">Sign in</button>
-    </form>
+    }
+    <button class="btn btn-lg btn-primary btn-block my-2" type="submit">Sign in</button>
+</form>

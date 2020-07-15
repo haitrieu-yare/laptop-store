@@ -14,10 +14,15 @@ namespace laptop_store.Controllers
     {
         private readonly LaptopBUS laptopBUS = new LaptopBUS();
         private readonly UserBUS userBUS = new UserBUS();
-        private void CheckSession()
+        private bool CheckSession()
         {
+            bool result = false;
             if (!string.IsNullOrEmpty(HttpContext.Session.GetString("CurrentUserName")))
+            {
                 ViewData["CurrentUserName"] = HttpContext.Session.GetString("CurrentUserName");
+                result = true;
+            }
+            return result;
         }
         public IActionResult Index()
         {
@@ -60,7 +65,11 @@ namespace laptop_store.Controllers
         }
         public IActionResult SignIn()
         {
-            CheckSession();
+            bool result = CheckSession();
+            if (result)
+            {
+                return RedirectToAction("Index");
+            }
             return View();
         }
         [HttpPost]
@@ -93,6 +102,7 @@ namespace laptop_store.Controllers
                     HttpContext.Session.SetString("CurrentUserPhone", (string)userDetail.Rows[0]["UserPhone"]);
                 }
                 #endregion CheckNullAddressAndPhone
+                HttpContext.Session.SetString("CurrentUserEmail", email);
                 HttpContext.Session.SetString("CurrentUserName", (string)userDetail.Rows[0]["UserName"]);
                 HttpContext.Session.SetString("CurrentUserRole", (string)userDetail.Rows[0]["UserRole"]);
                 
@@ -109,7 +119,16 @@ namespace laptop_store.Controllers
         }
         public IActionResult Profile()
         {
-            return View();
+            User user = new User()
+            {
+                UserEmail = HttpContext.Session.GetString("CurrentUserEmail"),
+                UserName = HttpContext.Session.GetString("CurrentUserName"),
+                UserRole = HttpContext.Session.GetString("CurrentUserRole"),
+                UserAddress = HttpContext.Session.GetString("CurrentUserAddress"),
+                UserPhone = HttpContext.Session.GetString("CurrentUserPhone")
+            };
+            CheckSession();
+            return View(user);
         }
     }
 }
