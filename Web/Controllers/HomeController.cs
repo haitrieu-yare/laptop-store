@@ -166,15 +166,5 @@ namespace laptop_store.Controllers
             CheckSession();
             return View(user);
         }
-        public IActionResult Cart()
-        {
-            return View();
-        }
-        [HttpPost] 
-        public IActionResult AddToCart()
-        {
-            int laptopID = int.Parse(HttpContext.Request.Form["LaptopID"]);
-            return RedirectToAction("Index");
-        }
     }
 }
