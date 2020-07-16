@@ -1,14 +1,39 @@
-﻿
+﻿@model string
 @{
     ViewData["Title"] = "SignUp";
 }
 
-<form class="form-signin lack-of-content-layout" method="post" asp-controller="Home" asp-action="SignUp">
+<form class="form-signin lack-of-content-layout" method="post" asp-controller="Home" asp-action="DoSignUp">
     <img class="mb-4" src="/android-chrome-512x512.png" alt="" width="72" height="72">
     <h1 class="h3 mb-3 font-weight-normal">Sign up</h1>
-    <input type="email" name="Email" class="form-control my-2" placeholder="Email address" required autofocus>
-    <input type="password" name="Password" class="form-control my-2" placeholder="Password" required>
-    <input type="password" name="RePassword" class="form-control my-2" placeholder="Password" required>
+    <div class="mb3">
+        <input type="email" name="Email" class="form-control my-2" placeholder="Email address" required autofocus>
+    </div>
+    <div class="mb3">
+        <input type="password" name="Password" class="form-control my-2" placeholder="Password" required>
+    </div>
+    <div class="mb3">
+        <input type="password" name="RePassword" class="form-control my-2" placeholder="Repeat Password" required>
+    </div>
+    @if (!string.IsNullOrEmpty(Model))
+    {
+        if (Model.Length != 0)
+        {
+            if (Model.Contains("Fail"))
+            {
+                <div class="alert alert-danger">@Model</div>
+            }
+            else if (Model.Contains("Email"))
+            {
+                <div class="alert alert-danger">@Model</div>
+            }
+            else
+            {
+                <div class="alert alert-success">@Model</div>
+            }
+
+        }
+    }
     <button class="btn btn-lg btn-primary btn-block my-2" type="submit">Sign up</button>
 </form>
 

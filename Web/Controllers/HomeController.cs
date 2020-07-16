@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using BUS;
@@ -62,6 +63,41 @@ namespace laptop_store.Controllers
         public IActionResult SignUp()
         {
             return View();
+        }
+        [HttpPost]
+        public IActionResult DoSignUp()
+        {
+            string email = HttpContext.Request.Form["Email"];
+            string password = HttpContext.Request.Form["Password"];
+            string rePassword = HttpContext.Request.Form["RePassword"];
+            if (!password.Equals(rePassword))
+            {
+                string notification = "Your Repeat Password isn't match your Password";
+                return View("SignUp", notification);
+            }
+            else
+            {
+                bool result;
+                try
+                {
+                    result = userBUS.SignUp(email, password);
+                }
+                catch (SqlException)
+                {
+                    string notification = "This Email has been used, please choose another Email";
+                    return View("SignUp", notification);
+                }
+                
+                if (result)
+                {
+                    string notification = "Sign Up Successful";
+                    return View("SignUp", notification);
+                } else
+                {
+                    string notification = "Sign Up Fail";
+                    return View("SignUp", notification);
+                }
+            }
         }
         public IActionResult SignIn()
         {

@@ -13,5 +13,9 @@ namespace BUS
         {
             return userDAL.SignIn(email, password);
         }
+        public bool SignUp(string email, string password)
+        {
+            return userDAL.SignUp(email, password);
+        }
     }
 }
