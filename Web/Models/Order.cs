@@ -8,7 +8,7 @@ namespace laptop_store.Models
     public class Order
     {
         public int OrderID { get; set; }
-        public int UserID { get; set; }
+        public string UserEmail { get; set; }
         public float OrderPrice { get; set; }
         public DateTime OrderDate { get; set; }
     }
