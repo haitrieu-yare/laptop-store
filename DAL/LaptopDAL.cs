@@ -56,5 +56,33 @@ namespace DAL
             }
             return laptopDetail;
         }
+        // Get Laptop Quantity
+        public int GetLaptopQuantity(int laptopID)
+        {
+            int laptopQuantity = 0;
+            string SQL = "Select LaptopQuantity From tblLaptop Where LaptopID=@ID";
+            try
+            {
+                if (_conn.State == ConnectionState.Closed)
+                {
+                    _conn.Open();
+                }
+                SqlCommand cmd = new SqlCommand(SQL, _conn);
+                cmd.Parameters.Add("@ID", SqlDbType.Int).Value = laptopID;
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    laptopQuantity = (int)reader["LaptopQuantity"];
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            } finally
+            {
+                _conn.Close();
+            }
+            return laptopQuantity;
+        }
     } // End Class
 } // End Namespace

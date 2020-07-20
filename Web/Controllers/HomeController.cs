@@ -15,6 +15,7 @@ namespace laptop_store.Controllers
     {
         private readonly LaptopBUS laptopBUS = new LaptopBUS();
         private readonly UserBUS userBUS = new UserBUS();
+        private readonly JsonUtility jsonUtility = new JsonUtility();
         private bool CheckSession()
         {
             bool result = false;
@@ -37,8 +38,18 @@ namespace laptop_store.Controllers
             Laptop requiredLaptop;
             try
             {
-                CheckSession();
+                bool checkSignIn = CheckSession();
+                if (!checkSignIn)
+                {
+                    ViewData["checkSignIn"] = "no";
+                }
                 int laptopID = int.Parse(HttpContext.Request.Form["laptopID"]);
+                int laptopQuantity = laptopBUS.GetLaptopQuantity(laptopID);
+                // Check Quantity
+                if (laptopQuantity == 0)
+                {
+                    ViewData["Quantity"] = "This product is out of stock";
+                }
                 DataTable laptopDetailTable = laptopBUS.GetLaptopDetail(laptopID);
                 requiredLaptop = new Laptop()
                 {
@@ -50,6 +61,7 @@ namespace laptop_store.Controllers
                     LaptopStorage = (string)laptopDetailTable.Rows[0]["LaptopStorage"],
                     LaptopDisplay = (string)laptopDetailTable.Rows[0]["LaptopDisplay"],
                     LaptopPrice = double.Parse(HttpContext.Request.Form["laptopPrice"]),
+                    LaptopQuantity = laptopQuantity,
                     LaptopImage = HttpContext.Request.Form["laptopImage"],
                     LaptopDiscountPercentage = float.Parse(HttpContext.Request.Form["laptopDiscountPercentage"])
                 };
@@ -170,12 +182,75 @@ namespace laptop_store.Controllers
         public IActionResult Cart()
         {
             CheckSession();
-            return View();
+            List<Laptop> listLaptopInCart = null;
+            if (HttpContext.Session.Keys.Contains("cart"))
+            {
+                string jsonString = HttpContext.Session.GetString("cart");
+                listLaptopInCart = jsonUtility.GetObjectFromJson<Laptop>(jsonString);
+            } else
+            {
+                ViewData["cart"] = "You haven't add any product to cart";
+            }
+            return View(listLaptopInCart);
         }
         [HttpPost] 
         public IActionResult AddToCart()
         {
             int laptopID = int.Parse(HttpContext.Request.Form["LaptopID"]);
+            string laptopName = HttpContext.Request.Form["LaptopName"];
+            double laptopPrice = double.Parse(HttpContext.Request.Form["LaptopPrice"]);
+            float laptopDiscountPercentage = float.Parse(HttpContext.Request.Form["LaptopDiscountPercentage"]);
+            bool checkExist = false;
+            try
+            {
+                if (HttpContext.Session.Keys.Contains("cart"))
+                {
+                    // Get list from session
+                    string jsonString = HttpContext.Session.GetString("cart");
+                    List<Laptop> listLaptopInCart = jsonUtility.GetObjectFromJson<Laptop>(jsonString);
+                    // If exist, plus one in quantity
+                    for (int i = 0; i < listLaptopInCart.Count; i++)
+                    {
+                        if (laptopID == listLaptopInCart[i].LaptopID)
+                        {
+                            listLaptopInCart[i].LaptopOrderQuantity++;
+                            checkExist = true;
+                        }
+                    }
+                    // If doesn't exist, add to list
+                    if (checkExist == false)
+                    {
+                        listLaptopInCart.Add(new Laptop()
+                        {
+                            LaptopID = laptopID,
+                            LaptopName = laptopName,
+                            LaptopPrice = laptopPrice,
+                            LaptopDiscountPercentage = laptopDiscountPercentage,
+                            LaptopOrderQuantity = 1
+                        });
+                    }
+                    jsonString = jsonUtility.SetObjectAsJson<Laptop>(listLaptopInCart);
+                    HttpContext.Session.SetString("cart", jsonString);
+                }
+                else
+                {
+                    List<Laptop> listLaptopInCart = new List<Laptop>();
+                    listLaptopInCart.Add(new Laptop()
+                    {
+                        LaptopID = laptopID,
+                        LaptopName = laptopName,
+                        LaptopPrice = laptopPrice,
+                        LaptopDiscountPercentage = laptopDiscountPercentage,
+                        LaptopOrderQuantity = 1
+                    });
+                    string jsonString = jsonUtility.SetObjectAsJson<Laptop>(listLaptopInCart);
+                    HttpContext.Session.SetString("cart", jsonString);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
             return RedirectToAction("Index");
         }
     }

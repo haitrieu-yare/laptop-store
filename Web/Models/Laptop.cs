@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace laptop_store.Models
 {
-    public class Laptop
+    public class Laptop 
     {
         public int LaptopID { get; set; }
         public string LaptopName { get; set; }
@@ -16,6 +16,7 @@ namespace laptop_store.Models
         public string LaptopDisplay { get; set; }
         public double LaptopPrice { get; set; }
         public int LaptopQuantity { get; set; }
+        public int LaptopOrderQuantity { get; set; }
         public DateTime LaptopImportDate { get; set; }
         public float LaptopDiscountPercentage { get; set; }
         public string LaptopImage { get; set; }

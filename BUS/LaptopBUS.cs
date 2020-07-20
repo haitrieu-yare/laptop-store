@@ -16,5 +16,9 @@ namespace BUS
         {
             return laptopDAL.GetLaptopDetail(laptopID);
         }
+        public int GetLaptopQuantity(int laptopID)
+        {
+            return laptopDAL.GetLaptopQuantity(laptopID);
+        }
     }
 }

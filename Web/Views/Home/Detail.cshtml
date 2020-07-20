@@ -42,10 +42,22 @@
             }
         </div>
         <div class="shadow-sm px-3 py-3 d-flex flex-column">
-            <form method="post" asp-controller="Home" asp-action="AddToCart">
-                <input type="hidden" name="LaptopID" value="@(Model.LaptopID)" />
-                <input class="nav-item btn btn-primary form-control-lg" type="submit" value="Add To Cart" />
-            </form>
+            @if (Model.LaptopQuantity == 0)
+            {
+                <p class="badge badge-warning px-3 py-3">@ViewData["Quantity"]</p>
+            } else if (ViewData["checkSignIn"] != null)
+            {
+                <a href="/Home/SignIn" class="btn btn-primary form-control-lg">Add To Cart</a>
+            } else
+            {
+                <form method="post" asp-controller="Home" asp-action="AddToCart">
+                    <input type="hidden" name="LaptopID" value="@(Model.LaptopID)" />
+                    <input type="hidden" name="LaptopName" value="@(Model.LaptopName)" />
+                    <input type="hidden" name="LaptopPrice" value="@(Model.LaptopPrice)" />
+                    <input type="hidden" name="LaptopDiscountPercentage" value="@(Model.LaptopDiscountPercentage)" />
+                    <input class="btn btn-primary form-control-lg" type="submit" value="Add To Cart" />
+                </form>
+            }
         </div>
     </div>
 </div>
