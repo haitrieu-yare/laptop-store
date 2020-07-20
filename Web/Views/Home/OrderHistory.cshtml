@@ -9,6 +9,17 @@
 </div>
 <div class="row">
     <div class="col-md-12 order-md-2 mb-4">
+        @if (ViewData["OrderAddingResult"] != null)
+        {
+            if (ViewData["OrderAddingResult"].Equals("True"))
+            {
+                <div class="alert alert-success" role="alert">Order Successful</div>
+            }
+            else
+            {
+                <div class="alert alert-danger" role="alert">Order Fail</div>
+            }
+        }
         @if (Model.Rows.Count == 0)
         {
             <h4 class="d-flex justify-content-between align-items-center mb-3">
@@ -27,11 +38,14 @@
             <ul class="list-group mb-3">
                 @for (int i = 0; i < Model.Rows.Count; i++)
                 {
-                <li class="list-group-item d-flex lh-condensed">
-                    <h6 class="align-items-center">Order ID: @(Model.Rows[i]["OrderID"])</h6>
-                    <span class="text-muted ml-auto mr-2">@(Model.Rows[i]["OrderPrice"])₫</span>
-                    <div class="btn btn-primary ml-auto">Detail</div>
-                </li>
+                    <li class="list-group-item d-flex lh-condensed">
+                        <h6 class="align-items-center">Order ID: @(Model.Rows[i]["OrderID"])</h6>
+                        <span class="text-muted ml-auto mr-2">@(Model.Rows[i]["OrderPrice"])₫</span>
+                        <form method="post" asp-controller="Home" asp-action="OrderDetail">
+                            <input type="hidden" name="OrderID" value="@(Model.Rows[i]["OrderID"])" />
+                            <input type="submit" class="btn btn-primary ml-auto" value="Detail" />
+                        </form>
+                    </li>
                 }
             </ul>
         }
