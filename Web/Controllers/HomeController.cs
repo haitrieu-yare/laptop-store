@@ -42,22 +42,30 @@ namespace laptop_store.Controllers
                 bool checkSignIn = CheckSession();
                 if (!checkSignIn)
                 {
-                    ViewData["checkSignIn"] = "no";
+                    ViewData["checkSignIn"] = "Haven't sign in";
                 } else
                 {
                     // Check session
                     if (HttpContext.Session.Keys.Contains("cart"))
-                    { 
+                    {
                         // Get list from session
                         string jsonString = HttpContext.Session.GetString("cart");
                         List<Laptop> listLaptopInCart = jsonUtility.GetObjectFromJson<Laptop>(jsonString);
+                        if (listLaptopInCart.Count >= 7)
+                        {
+                            ViewData["Notification"] = "Can not add more item. Cart can only contains " +
+                                "less than or equal 7 items into cart";
+                        } else
+                        {
+
+                        }
                         for (int i = 0; i < listLaptopInCart.Count; i++)
                         {
                             if (laptopID == listLaptopInCart[i].LaptopID)
                             {
                                 if (listLaptopInCart[i].LaptopQuantity <= listLaptopInCart[i].LaptopOrderQuantity)
                                 {
-                                    ViewData["Quantity"] = "This product only have " +
+                                    ViewData["Notification"] = "This product only have " +
                                         listLaptopInCart[i].LaptopOrderQuantity + " left." +
                                         " Can't add more to cart.";
                                 }
@@ -69,7 +77,7 @@ namespace laptop_store.Controllers
                 // Check Quantity
                 if (laptopQuantity == 0)
                 {
-                    ViewData["Quantity"] = "This product is out of stock";
+                    ViewData["Notification"] = "This product is out of stock";
                 }
                 //
                 DataTable laptopDetailTable = laptopBUS.GetLaptopDetail(laptopID);
@@ -232,35 +240,34 @@ namespace laptop_store.Controllers
                     // Get list from session
                     string jsonString = HttpContext.Session.GetString("cart");
                     List<Laptop> listLaptopInCart = jsonUtility.GetObjectFromJson<Laptop>(jsonString);
-                    // If exist, plus one in quantity
+                    // If item exist, plus one in quantity
                     for (int i = 0; i < listLaptopInCart.Count; i++)
                     {
                         if (laptopID == listLaptopInCart[i].LaptopID)
-                        {
-                            if(listLaptopInCart[i].LaptopQuantity > listLaptopInCart[i].LaptopOrderQuantity)
-                            {
-                                listLaptopInCart[i].LaptopOrderQuantity++;
-                                checkExist = true;
-                            } else
-                            {
-                                ViewData["Quantity"] = "This product only have " + 
-                                    listLaptopInCart[i].LaptopOrderQuantity + " left";
-                                return RedirectToAction("Detail");
-                            }
+                        {                            
+                            listLaptopInCart[i].LaptopOrderQuantity++;
+                            checkExist = true;
                         }
                     }
-                    // If doesn't exist, add to list
+                    // If item doesn't exist, add to list
                     if (checkExist == false)
                     {
-                        listLaptopInCart.Add(new Laptop()
+                        if (listLaptopInCart.Count >= 7)
                         {
-                            LaptopID = laptopID,
-                            LaptopName = laptopName,
-                            LaptopPrice = laptopPrice,
-                            LaptopQuantity = laptopQuantity,
-                            LaptopDiscountPercentage = laptopDiscountPercentage,
-                            LaptopOrderQuantity = 1
-                        });
+                            ViewData["Quantity"] = "Can not add more than 7 items to cart";
+                            return RedirectToAction("Detail");
+                        } else
+                        {
+                            listLaptopInCart.Add(new Laptop()
+                            {
+                                LaptopID = laptopID,
+                                LaptopName = laptopName,
+                                LaptopPrice = laptopPrice,
+                                LaptopQuantity = laptopQuantity,
+                                LaptopDiscountPercentage = laptopDiscountPercentage,
+                                LaptopOrderQuantity = 1
+                            });
+                        }
                     }
                     jsonString = jsonUtility.SetObjectAsJson<Laptop>(listLaptopInCart);
                     HttpContext.Session.SetString("cart", jsonString);
@@ -287,6 +294,15 @@ namespace laptop_store.Controllers
                 throw ex;
             }
             return RedirectToAction("Index");
+        }
+        [HttpPost]
+        public IActionResult Order()
+        {
+            return View("OrderHistory");
+        }
+        public IActionResult OrderHistory()
+        {
+            return View();
         }
     }
 }

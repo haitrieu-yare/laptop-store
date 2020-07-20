@@ -42,9 +42,9 @@
             }
         </div>
         <div class="shadow-sm px-3 py-3 d-flex flex-column">
-            @if (ViewData["Quantity"] != null)
+            @if (ViewData["Notification"] != null)
             {
-                <p class="badge badge-warning px-3 py-3">@ViewData["Quantity"]</p>
+                <p class="badge badge-warning px-3 py-3 text-wrap">@ViewData["Notification"]</p>
             } else if (ViewData["checkSignIn"] != null)
             {
                 <a href="/Home/SignIn" class="btn btn-primary form-control-lg">Add To Cart</a>
