@@ -85,7 +85,7 @@ namespace DAL
             }
             return result;
         }
-        public bool AddNewOrderUnit(DataTable newOrder)
+        public bool AddNewOrderUnit(DataTable newOrderUnit)
         {
             bool result = true;
             string SQL = "Insert Into tblOrderUnit Values(@OrderUnitID, @OrderID, @LaptopID, @Quantity, @Price)";
@@ -96,17 +96,20 @@ namespace DAL
                     _conn.Open();
                 }
                 SqlCommand cmd = new SqlCommand(SQL, _conn);
-                for (int i = 0; i < newOrder.Rows.Count; i++)
+                for (int i = 0; i < newOrderUnit.Rows.Count; i++)
                 {
-                    cmd.Parameters.Add("@OrderUnitID", SqlDbType.Int).Value = newOrder.Rows[i]["OrderUnitID"];
-                    cmd.Parameters.Add("@OrderID", SqlDbType.Int).Value = newOrder.Rows[i]["OrderID"];
-                    cmd.Parameters.Add("@LaptopID", SqlDbType.Int).Value = newOrder.Rows[i]["LaptopID"];
-                    cmd.Parameters.Add("@Quantity", SqlDbType.Int).Value = newOrder.Rows[i]["Quantity"];
-                    cmd.Parameters.Add("@Price", SqlDbType.Float).Value = newOrder.Rows[i]["Price"];
+                    cmd.Parameters.Add("@OrderUnitID", SqlDbType.Int).Value = newOrderUnit.Rows[i]["OrderUnitID"];
+                    cmd.Parameters.Add("@OrderID", SqlDbType.Int).Value = newOrderUnit.Rows[i]["OrderID"];
+                    cmd.Parameters.Add("@LaptopID", SqlDbType.Int).Value = newOrderUnit.Rows[i]["LaptopID"];
+                    cmd.Parameters.Add("@Quantity", SqlDbType.Int).Value = newOrderUnit.Rows[i]["Quantity"];
+                    cmd.Parameters.Add("@Price", SqlDbType.Float).Value = newOrderUnit.Rows[i]["Price"];
                     result = cmd.ExecuteNonQuery() > 0; 
-                    if (result)
+                    if (!result)
                     {
                         break;
+                    } else
+                    {
+                        cmd.Parameters.Clear();
                     }
                 }
             }

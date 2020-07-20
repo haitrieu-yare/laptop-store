@@ -53,6 +53,7 @@
                     else
                     {
                         <div class="text-white navbar-text mr-2">Welcome, @ViewData["CurrentUserName"]</div>
+                        <a href="/Home/OrderHistory" class="nav-item btn btn-info mr-2 d-flex align-items-center">Order History</a>
                         <a href="/Home/Cart" class="nav-item btn btn-info mr-2 d-flex align-items-center">Cart</a>
                         <a href="/Home/Profile" class="nav-item btn btn-primary mr-2 d-flex align-items-center">Profile</a>
                         <form method="post" asp-controller="Home" asp-action="SignOut">

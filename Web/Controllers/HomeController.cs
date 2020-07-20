@@ -299,7 +299,7 @@ namespace laptop_store.Controllers
         [HttpPost]
         public IActionResult Order()
         {
-            bool result = false;
+            bool result;
             double totalPrice = double.Parse(HttpContext.Request.Form["totalPrice"]);
             // Check if cart is exist
             if (HttpContext.Session.Keys.Contains("cart"))
@@ -333,7 +333,7 @@ namespace laptop_store.Controllers
                     for (int i = 0; i < listLaptopInCart.Count; i++)
                     {
                         DataRow drOrderUnit = listOrderUnit.NewRow();
-                        drOrderUnit["OrderUnitID"] = currentOrderID + 1;
+                        drOrderUnit["OrderUnitID"] = currentOrderUnitID + 1;
                         drOrderUnit["OrderID"] = newOrder.Rows[0]["OrderID"];
                         drOrderUnit["LaptopID"] = listLaptopInCart[i].LaptopID;
                         drOrderUnit["Quantity"] = listLaptopInCart[i].LaptopOrderQuantity;
@@ -345,11 +345,14 @@ namespace laptop_store.Controllers
                     result = orderBUS.AddNewOrderUnit(listOrderUnit);
                 }
                 HttpContext.Session.SetString("OrderAddingResult", result.ToString());
+                // Delete cart when finished
+                HttpContext.Session.Remove("cart");
             }
             return RedirectToAction("OrderHistory");
         }
         public IActionResult OrderHistory()
         {
+            CheckSession();
             if (!string.IsNullOrEmpty(HttpContext.Session.GetString("OrderAddingResult")))            
             {
                 string result = HttpContext.Session.GetString("OrderAddingResult");
