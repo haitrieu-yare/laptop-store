@@ -112,6 +112,7 @@ namespace laptop_store.Controllers
         public IActionResult SignOut()
         {
             HttpContext.Session.Clear();
+            ViewData.Clear();
             return RedirectToAction("Index");
         }
         [HttpPost]
@@ -168,6 +169,7 @@ namespace laptop_store.Controllers
         }
         public IActionResult Cart()
         {
+            CheckSession();
             return View();
         }
         [HttpPost] 
