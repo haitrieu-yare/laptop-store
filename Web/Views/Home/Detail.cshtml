@@ -42,7 +42,7 @@
             }
         </div>
         <div class="shadow-sm px-3 py-3 d-flex flex-column">
-            @if (Model.LaptopQuantity == 0)
+            @if (ViewData["Quantity"] != null)
             {
                 <p class="badge badge-warning px-3 py-3">@ViewData["Quantity"]</p>
             } else if (ViewData["checkSignIn"] != null)
@@ -54,6 +54,7 @@
                     <input type="hidden" name="LaptopID" value="@(Model.LaptopID)" />
                     <input type="hidden" name="LaptopName" value="@(Model.LaptopName)" />
                     <input type="hidden" name="LaptopPrice" value="@(Model.LaptopPrice)" />
+                    <input type="hidden" name="LaptopQuantity" value="@(Model.LaptopQuantity)" />
                     <input type="hidden" name="LaptopDiscountPercentage" value="@(Model.LaptopDiscountPercentage)" />
                     <input class="btn btn-primary form-control-lg" type="submit" value="Add To Cart" />
                 </form>
