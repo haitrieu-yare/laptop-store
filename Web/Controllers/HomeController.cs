@@ -351,7 +351,8 @@ namespace laptop_store.Controllers
         }
         public IActionResult OrderHistory()
         {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString("OrderAddingResult") {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("OrderAddingResult")))            
+            {
                 return View();
             } else
             {
