@@ -11,6 +11,6 @@ namespace laptop_store.Models
         public int OrderID { get; set; }
         public int LaptopID { get; set; }
         public int Quantity { get; set; }
-        public float Price { get; set; }
+        public double Price { get; set; }
     }
 }

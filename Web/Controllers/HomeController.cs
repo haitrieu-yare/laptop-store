@@ -15,6 +15,7 @@ namespace laptop_store.Controllers
     {
         private readonly LaptopBUS laptopBUS = new LaptopBUS();
         private readonly UserBUS userBUS = new UserBUS();
+        private readonly OrderBUS orderBUS = new OrderBUS();
         private readonly JsonUtility jsonUtility = new JsonUtility();
         private bool CheckSession()
         {
@@ -298,11 +299,66 @@ namespace laptop_store.Controllers
         [HttpPost]
         public IActionResult Order()
         {
-            return View("OrderHistory");
+            bool result = false;
+            double totalPrice = double.Parse(HttpContext.Request.Form["totalPrice"]);
+            // Check if cart is exist
+            if (HttpContext.Session.Keys.Contains("cart"))
+            {
+                // Get list from session
+                string jsonString = HttpContext.Session.GetString("cart");
+                List<Laptop> listLaptopInCart = jsonUtility.GetObjectFromJson<Laptop>(jsonString);
+                // Create Order
+                int currentOrderID = orderBUS.GetOrderID();
+                DataTable newOrder = new DataTable();
+                newOrder.Rows[0]["OrderID"] = currentOrderID + 1;
+                newOrder.Rows[0]["UserEmail"] = HttpContext.Session.GetString("CurrentUserEmail");
+                newOrder.Rows[0]["OrderPrice"] = totalPrice;
+                newOrder.Rows[0]["OrderDate"] = DateTime.Now;
+                //Order newOrder = new Order()
+                //{
+                //    OrderID = currentOrderID + 1,
+                //    UserEmail = HttpContext.Session.GetString("CurrentUserEmail"),
+                //    OrderPrice = totalPrice,
+                //    OrderDate = DateTime.Now
+                //};
+                // Save Order to DB
+                result = orderBUS.AddNewOrder(newOrder);
+                // Create listOrderUnit
+                DataTable listOrderUnit = new DataTable();
+                int currentOrderUnitID = orderBUS.GetOrderUnitID();
+                for (int i = 0; i < listLaptopInCart.Count; i++)
+                {
+                    listOrderUnit.Rows[i]["OrderUnitID"] = currentOrderID + 1;
+                    listOrderUnit.Rows[i]["OrderID"] = (int)newOrder.Rows[0]["OrderID"];
+                    listOrderUnit.Rows[i]["LaptopID"] = listLaptopInCart[i].LaptopID;
+                    listOrderUnit.Rows[i]["Quantity"] = listLaptopInCart[i].LaptopOrderQuantity;
+                    listOrderUnit.Rows[i]["Price"] = listLaptopInCart[i].LaptopPrice * (100 - listLaptopInCart[i].LaptopDiscountPercentage);
+                    currentOrderUnitID++;
+                }
+                //OrderUnit orderUnit = new OrderUnit()
+                //{
+                //    OrderUnitID = currentOrderUnitID + 1,
+                //    OrderID = (int)newOrder.Rows[0]["OrderID"],
+                //    LaptopID = laptop.LaptopID,
+                //    Quantity = laptop.LaptopOrderQuantity,
+                //    Price = (laptop.LaptopPrice * (100 - laptop.LaptopDiscountPercentage))
+                //};
+                // Save listOrderUnit to DB
+                result = orderBUS.AddNewOrderUnit(listOrderUnit);
+                HttpContext.Session.SetString("OrderAddingResult", result.ToString());
+            }
+            return RedirectToAction("OrderHistory");
         }
         public IActionResult OrderHistory()
         {
-            return View();
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("OrderAddingResult") {
+                return View();
+            } else
+            {
+                string result = HttpContext.Session.GetString("OrderAddingResult");
+                ViewData["OrderAddingResult"] = result;
+                return View();
+            }
         }
     }
 }

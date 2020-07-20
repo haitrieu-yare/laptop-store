@@ -43,7 +43,6 @@
                 </li>
             </ul>
             <form method="post" asp-controller="Home" asp-action="Order">
-                <input type="hidden" name="listLaptopInCart" value="@Model" />
                 <input type="hidden" name="totalPrice" value="@total" />
                 <button class="btn btn-primary btn-lg btn-block" type="submit">Order</button>
             </form>
