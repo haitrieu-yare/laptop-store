@@ -10,6 +10,5 @@ namespace laptop_store.Models
         public int OrderID { get; set; }
         public string UserEmail { get; set; }
         public double OrderPrice { get; set; }
-        public DateTime OrderDate { get; set; }
     }
 }

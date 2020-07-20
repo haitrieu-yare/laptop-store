@@ -310,56 +310,54 @@ namespace laptop_store.Controllers
                 // Create Order
                 int currentOrderID = orderBUS.GetOrderID();
                 DataTable newOrder = new DataTable();
-                newOrder.Rows[0]["OrderID"] = currentOrderID + 1;
-                newOrder.Rows[0]["UserEmail"] = HttpContext.Session.GetString("CurrentUserEmail");
-                newOrder.Rows[0]["OrderPrice"] = totalPrice;
-                newOrder.Rows[0]["OrderDate"] = DateTime.Now;
-                //Order newOrder = new Order()
-                //{
-                //    OrderID = currentOrderID + 1,
-                //    UserEmail = HttpContext.Session.GetString("CurrentUserEmail"),
-                //    OrderPrice = totalPrice,
-                //    OrderDate = DateTime.Now
-                //};
+                newOrder.Columns.Add("OrderID");
+                newOrder.Columns.Add("UserEmail");
+                newOrder.Columns.Add("OrderPrice");
+                DataRow drOrder = newOrder.NewRow();
+                drOrder["OrderID"] = currentOrderID + 1;
+                drOrder["UserEmail"] = HttpContext.Session.GetString("CurrentUserEmail");
+                drOrder["OrderPrice"] = totalPrice;
+                newOrder.Rows.Add(drOrder);
                 // Save Order to DB
                 result = orderBUS.AddNewOrder(newOrder);
-                // Create listOrderUnit
-                DataTable listOrderUnit = new DataTable();
-                int currentOrderUnitID = orderBUS.GetOrderUnitID();
-                for (int i = 0; i < listLaptopInCart.Count; i++)
+                if (result)
                 {
-                    listOrderUnit.Rows[i]["OrderUnitID"] = currentOrderID + 1;
-                    listOrderUnit.Rows[i]["OrderID"] = (int)newOrder.Rows[0]["OrderID"];
-                    listOrderUnit.Rows[i]["LaptopID"] = listLaptopInCart[i].LaptopID;
-                    listOrderUnit.Rows[i]["Quantity"] = listLaptopInCart[i].LaptopOrderQuantity;
-                    listOrderUnit.Rows[i]["Price"] = listLaptopInCart[i].LaptopPrice * (100 - listLaptopInCart[i].LaptopDiscountPercentage);
-                    currentOrderUnitID++;
+                    // Create listOrderUnit
+                    DataTable listOrderUnit = new DataTable();
+                    listOrderUnit.Columns.Add("OrderUnitID");
+                    listOrderUnit.Columns.Add("OrderID");
+                    listOrderUnit.Columns.Add("LaptopID");
+                    listOrderUnit.Columns.Add("Quantity");
+                    listOrderUnit.Columns.Add("Price");
+                    int currentOrderUnitID = orderBUS.GetOrderUnitID();
+                    for (int i = 0; i < listLaptopInCart.Count; i++)
+                    {
+                        DataRow drOrderUnit = listOrderUnit.NewRow();
+                        drOrderUnit["OrderUnitID"] = currentOrderID + 1;
+                        drOrderUnit["OrderID"] = newOrder.Rows[0]["OrderID"];
+                        drOrderUnit["LaptopID"] = listLaptopInCart[i].LaptopID;
+                        drOrderUnit["Quantity"] = listLaptopInCart[i].LaptopOrderQuantity;
+                        drOrderUnit["Price"] = listLaptopInCart[i].LaptopPrice * (100 - listLaptopInCart[i].LaptopDiscountPercentage) / 100 ;
+                        listOrderUnit.Rows.Add(drOrderUnit);
+                        currentOrderUnitID++;
+                    }
+                    // Save listOrderUnit to DB
+                    result = orderBUS.AddNewOrderUnit(listOrderUnit);
                 }
-                //OrderUnit orderUnit = new OrderUnit()
-                //{
-                //    OrderUnitID = currentOrderUnitID + 1,
-                //    OrderID = (int)newOrder.Rows[0]["OrderID"],
-                //    LaptopID = laptop.LaptopID,
-                //    Quantity = laptop.LaptopOrderQuantity,
-                //    Price = (laptop.LaptopPrice * (100 - laptop.LaptopDiscountPercentage))
-                //};
-                // Save listOrderUnit to DB
-                result = orderBUS.AddNewOrderUnit(listOrderUnit);
                 HttpContext.Session.SetString("OrderAddingResult", result.ToString());
             }
             return RedirectToAction("OrderHistory");
         }
         public IActionResult OrderHistory()
         {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString("OrderAddingResult")))            
-            {
-                return View();
-            } else
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("OrderAddingResult")))            
             {
                 string result = HttpContext.Session.GetString("OrderAddingResult");
                 ViewData["OrderAddingResult"] = result;
-                return View();
             }
+            string userEmail = HttpContext.Session.GetString("CurrentUserEmail");
+            DataTable listOrder = orderBUS.GetOrder(1, 20, userEmail);
+            return View(listOrder);
         }
     }
 }

@@ -25,5 +25,9 @@ namespace BUS
         {
             return orderDAL.AddNewOrderUnit(newOrderUnit);
         }
+        public DataTable GetOrder(int begin, int end, string userEmail)
+        {
+            return orderDAL.GetOrder(begin, end, userEmail);
+        }
     }
 }
