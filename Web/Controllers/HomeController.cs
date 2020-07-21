@@ -381,6 +381,14 @@ namespace laptop_store.Controllers
                         // Save listOrderUnit to DB
                         result = orderBUS.AddNewOrderUnit(listOrderUnit);
                     }
+                    if (result)
+                    {
+                        for (int i = 0; i < listLaptopInCart.Count; i++)
+                        {
+                            int laptopNewQuantity = listLaptopInCart[i].LaptopQuantity - listLaptopInCart[i].LaptopOrderQuantity;
+                            result = laptopBUS.UpdateLaptopQuantity(listLaptopInCart[i].LaptopID, laptopNewQuantity);
+                        }
+                    }
                     HttpContext.Session.SetString("OrderAddingResult", result.ToString());
                     // Delete cart when finished
                     HttpContext.Session.Remove("cart");
