@@ -17,5 +17,9 @@ namespace BUS
         {
             return userDAL.SignUp(email, password);
         }
+        public bool UpdateProfile(string userEmail, string userName, string userAddress, string userPhone)
+        {
+            return userDAL.UpdateProfile(userEmail, userName, userAddress, userPhone);
+        }
     }
 }

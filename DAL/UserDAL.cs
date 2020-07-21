@@ -12,7 +12,7 @@ namespace DAL
         public int CheckUserCount()
         {
             int count = 0;
-            string SQL = "Select Count(UserEmail) As UserEmail From tblUser ";
+            string SQL = "Select Count(UserEmail) As UserEmail From tblUser";
             try
             {
                 if (_conn.State == ConnectionState.Closed)
@@ -39,7 +39,7 @@ namespace DAL
         public DataTable SignIn(string email, string password)
         {
             DataTable userDetail = new DataTable();
-            String SQL = "Select UserName, UserRole, UserAddress, UserPhone From tblUser Where UserEmail=@Email AND UserPassword=@Password";
+            String SQL = "Select UserName, UserAddress, UserPhone From tblUser Where UserEmail=@Email AND UserPassword=@Password";
             try
             {
                 if (_conn.State == ConnectionState.Closed)
@@ -68,7 +68,7 @@ namespace DAL
             bool result = false;
             int newUserNumber = CheckUserCount() + 1;
             string userName = "User" + newUserNumber;
-            string SQL = "Insert tblUser Values(@Email,@Name,'User',@Password,null,null)";
+            string SQL = "Insert tblUser Values(@Email,@Name,@Password,null,null)";
             try
             {
                 if (_conn.State == ConnectionState.Closed)
@@ -79,6 +79,32 @@ namespace DAL
                 cmd.Parameters.Add("@Email", SqlDbType.VarChar).Value = email;
                 cmd.Parameters.Add("@Password", SqlDbType.VarChar).Value = password;
                 cmd.Parameters.Add("@Name", SqlDbType.VarChar).Value = userName;
+                result = cmd.ExecuteNonQuery() > 0;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            } finally
+            {
+                _conn.Close();
+            }
+            return result;
+        }
+        public bool UpdateProfile(string userEmail, string userName, string userAddress, string userPhone)
+        {
+            bool result = true;
+            try
+            {
+                string SQL = "Update tblUser Set UserName=@UserName, UserAddress=@UserAddress, UserPhone=@UserPhone Where UserEmail=@UserEmail";
+                if (_conn.State == ConnectionState.Closed)
+                {
+                    _conn.Open();
+                }
+                SqlCommand cmd = new SqlCommand(SQL, _conn);
+                cmd.Parameters.Add("@UserEmail", SqlDbType.VarChar).Value = userEmail;
+                cmd.Parameters.Add("@UserName", SqlDbType.VarChar).Value = userName;
+                cmd.Parameters.Add("@UserAddress", SqlDbType.VarChar).Value = userAddress;
+                cmd.Parameters.Add("@UserPhone", SqlDbType.VarChar).Value = userPhone;
                 result = cmd.ExecuteNonQuery() > 0;
             }
             catch (Exception ex)

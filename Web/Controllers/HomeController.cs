@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Threading.Tasks;
 using BUS;
 using laptop_store.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.RegularExpressions;
 
 namespace laptop_store.Controllers
 {
@@ -179,8 +179,6 @@ namespace laptop_store.Controllers
                 #endregion CheckNullAddressAndPhone
                 HttpContext.Session.SetString("CurrentUserEmail", email);
                 HttpContext.Session.SetString("CurrentUserName", (string)userDetail.Rows[0]["UserName"]);
-                HttpContext.Session.SetString("CurrentUserRole", (string)userDetail.Rows[0]["UserRole"]);
-                
             }
             catch (IndexOutOfRangeException) //Check Sai Email & Password
             {
@@ -198,7 +196,6 @@ namespace laptop_store.Controllers
             {
                 UserEmail = HttpContext.Session.GetString("CurrentUserEmail"),
                 UserName = HttpContext.Session.GetString("CurrentUserName"),
-                UserRole = HttpContext.Session.GetString("CurrentUserRole"),
                 UserAddress = HttpContext.Session.GetString("CurrentUserAddress"),
                 UserPhone = HttpContext.Session.GetString("CurrentUserPhone")
             };
@@ -208,6 +205,39 @@ namespace laptop_store.Controllers
                 ViewData["EnterInformartion"] = HttpContext.Session.GetString("EnterInformartion");
             }
             return View(user);
+        }
+        [HttpPost]
+        public IActionResult ChangeProfile()
+        {
+            try
+            {
+                string userEmail = HttpContext.Request.Form["UserEmail"];
+                string userName = HttpContext.Request.Form["UserName"];
+                string userAddress = HttpContext.Request.Form["UserAddress"];
+                string userPhone = HttpContext.Request.Form["UserPhone"];
+                Regex regex = new Regex(@"^0[0-9]{9}$");
+                if (!regex.IsMatch(userPhone))
+                {
+                    HttpContext.Session.SetString("EnterInformartion", "Phone must be number with 10 digits, starting with 0");
+                    return RedirectToAction("Profile");
+                }
+                bool result = userBUS.UpdateProfile(userEmail, userName, userAddress, userPhone);
+                if (result)
+                {
+                    HttpContext.Session.SetString("EnterInformartion", "Update Successful");
+                    HttpContext.Session.SetString("CurrentUserName", userName);
+                    HttpContext.Session.SetString("CurrentUserAddress", userAddress);
+                    HttpContext.Session.SetString("CurrentUserPhone", userPhone);
+                } else
+                {
+                    HttpContext.Session.SetString("EnterInformartion", "Update Fail");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return RedirectToAction("Profile");
         }
         public IActionResult Cart()
         {
