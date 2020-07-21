@@ -412,7 +412,8 @@ namespace laptop_store.Controllers
         public IActionResult OrderDetail()
         {
             int orderID = int.Parse(HttpContext.Request.Form["OrderID"]);
-            return View();
+            DataTable listOrderUnit = orderBUS.GetOrderUnit(orderID);
+            return View(listOrderUnit);
         }
     }
 }

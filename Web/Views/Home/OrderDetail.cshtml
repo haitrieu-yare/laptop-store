@@ -1,7 +1,29 @@
-﻿
+﻿@model System.Data.DataTable
 @{
     ViewData["Title"] = "OrderDetail";
 }
 
-<h1>OrderDetail</h1>
-
+<div class="py-5 text-center">
+    <img class="mb-4" src="/android-chrome-512x512.png" alt="" width="72" height="72">
+    <h2>Order Detail</h2>
+</div>
+<div class="row">
+    <div class="col-md-12 order-md-2 mb-4">
+        <h4 class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-muted">Your Order Detail</span>
+            <span class="badge badge-secondary badge-pill">@Model.Rows.Count</span>
+        </h4>
+        <ul class="list-group mb-3">
+            @for (int i = 0; i < Model.Rows.Count; i++)
+            {
+                <li class="list-group-item d-flex lh-condensed">
+                    <div>
+                        <h6 class="align-items-center">Laptop: @(Model.Rows[i]["LaptopName"])</h6>
+                        <small class="text-muted">Quantity: @(Model.Rows[i]["Quantity"])</small>
+                    </div>
+                    <span class="text-muted ml-auto mr-2">@(Model.Rows[i]["Price"])₫</span>
+                </li>
+            }
+        </ul>
+    </div>
+</div>

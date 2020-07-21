@@ -108,5 +108,34 @@ namespace DAL
             }
             return result;
         }
+        // Get Laptop Name
+        public string GetLaptopName(int laptopID)
+        {
+            string laptopName = null;
+            string SQL = "Select LaptopName From tblLaptop Where LaptopID=@ID";
+            try
+            {
+                if (_conn.State == ConnectionState.Closed)
+                {
+                    _conn.Open();
+                }
+                SqlCommand cmd = new SqlCommand(SQL, _conn);
+                cmd.Parameters.Add("@ID", SqlDbType.Int).Value = laptopID;
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    laptopName = (string)reader["LaptopName"];
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                _conn.Close();
+            }
+            return laptopName;
+        }
     } // End Class
 } // End Namespace

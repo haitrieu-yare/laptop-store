@@ -148,5 +148,37 @@ namespace DAL
             }
             return listOrder;
         }
+        public DataTable GetOrderUnit(int orderID)
+        {
+            DataTable orderUnitList = new DataTable();
+            string SQL = "Select LaptopID, Quantity, Price From tblOrderUnit Where OrderID=@OrderID";
+            try
+            {
+                if (_conn.State == ConnectionState.Closed)
+                {
+                    _conn.Open();
+                }
+                SqlCommand cmd = new SqlCommand(SQL, _conn);
+                cmd.Parameters.Add("@OrderID", SqlDbType.Int).Value = orderID;
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                adapter.Fill(orderUnitList);
+                // Get Laptop Name
+                LaptopDAL laptopDAL = new LaptopDAL();
+                orderUnitList.Columns.Add("LaptopName");
+                for (int i = 0; i < orderUnitList.Rows.Count; i++)
+                {
+                    orderUnitList.Rows[i]["LaptopName"] = laptopDAL.GetLaptopName((int)orderUnitList.Rows[i]["LaptopID"]);
+                }
+                orderUnitList.Columns.Remove("LaptopID");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            } finally
+            {
+                _conn.Close();
+            }
+            return orderUnitList;
+        }
     }
 }
