@@ -19,11 +19,7 @@
     {
         if (Model.Length != 0)
         {
-            if (Model.Contains("Fail"))
-            {
-                <div class="alert alert-danger">@Model</div>
-            }
-            else if (Model.Contains("Email"))
+            if (Model.Contains("Fail") || Model.Contains("Email") || Model.Contains("Password"))
             {
                 <div class="alert alert-danger">@Model</div>
             }

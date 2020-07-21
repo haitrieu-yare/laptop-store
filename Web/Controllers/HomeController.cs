@@ -56,9 +56,6 @@ namespace laptop_store.Controllers
                         {
                             ViewData["Notification"] = "Can not add more item. Cart can only contains " +
                                 "less than or equal 7 items into cart";
-                        } else
-                        {
-
                         }
                         for (int i = 0; i < listLaptopInCart.Count; i++)
                         {
@@ -66,9 +63,7 @@ namespace laptop_store.Controllers
                             {
                                 if (listLaptopInCart[i].LaptopQuantity <= listLaptopInCart[i].LaptopOrderQuantity)
                                 {
-                                    ViewData["Notification"] = "This product only have " +
-                                        listLaptopInCart[i].LaptopOrderQuantity + " left." +
-                                        " Can't add more to cart.";
+                                    ViewData["Notification"] = "Out of stock";
                                 }
                             }
                         }
