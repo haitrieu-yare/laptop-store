@@ -40,11 +40,13 @@ namespace laptop_store.Controllers
             try
             {
                 int laptopID = int.Parse(HttpContext.Request.Form["laptopID"]);
+                // Check SignIn de hien thi UserName va ngan User Add To Cart khi chua SignIn
                 bool checkSignIn = CheckSession();
                 if (!checkSignIn)
                 {
                     ViewData["checkSignIn"] = "Haven't sign in";
-                } else
+                }
+                else 
                 {
                     // Check session
                     if (HttpContext.Session.Keys.Contains("cart"))
@@ -199,7 +201,12 @@ namespace laptop_store.Controllers
                 UserAddress = HttpContext.Session.GetString("CurrentUserAddress"),
                 UserPhone = HttpContext.Session.GetString("CurrentUserPhone")
             };
-            CheckSession();
+            bool result = CheckSession();
+            // Check SignIn
+            if (!result)
+            {
+                return RedirectToAction("SignIn");
+            }
             if (!string.IsNullOrEmpty(HttpContext.Session.GetString("EnterInformartion")))
             {
                 ViewData["EnterInformartion"] = HttpContext.Session.GetString("EnterInformartion");
@@ -241,15 +248,23 @@ namespace laptop_store.Controllers
         }
         public IActionResult Cart()
         {
-            CheckSession();
             List<Laptop> listLaptopInCart = null;
-            if (HttpContext.Session.Keys.Contains("cart"))
+            bool result = CheckSession();
+            // Check SignIn
+            if (!result)
             {
-                string jsonString = HttpContext.Session.GetString("cart");
-                listLaptopInCart = jsonUtility.GetObjectFromJson<Laptop>(jsonString);
+                return RedirectToAction("SignIn");
             } else
             {
-                ViewData["cart"] = "You haven't add any product to cart";
+                if (HttpContext.Session.Keys.Contains("cart"))
+                {
+                    string jsonString = HttpContext.Session.GetString("cart");
+                    listLaptopInCart = jsonUtility.GetObjectFromJson<Laptop>(jsonString);
+                }
+                else
+                {
+                    ViewData["cart"] = "You haven't add any product to cart";
+                }
             }
             return View(listLaptopInCart);
         }
@@ -398,21 +413,38 @@ namespace laptop_store.Controllers
         }
         public IActionResult OrderHistory()
         {
-            CheckSession();
-            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("OrderAddingResult")))            
+            DataTable listOrder;
+            bool resultSession = CheckSession();
+            // Check SignIn
+            if (!resultSession)
             {
-                string result = HttpContext.Session.GetString("OrderAddingResult");
-                ViewData["OrderAddingResult"] = result;
+                return RedirectToAction("SignIn");
+            } else
+            {
+                if (!string.IsNullOrEmpty(HttpContext.Session.GetString("OrderAddingResult")))
+                {
+                    string result = HttpContext.Session.GetString("OrderAddingResult");
+                    ViewData["OrderAddingResult"] = result;
+                }
+                string userEmail = HttpContext.Session.GetString("CurrentUserEmail");
+                listOrder = orderBUS.GetOrder(1, 20, userEmail);
             }
-            string userEmail = HttpContext.Session.GetString("CurrentUserEmail");
-            DataTable listOrder = orderBUS.GetOrder(1, 20, userEmail);
             return View(listOrder);
         }
         [HttpPost]
         public IActionResult OrderDetail()
         {
-            int orderID = int.Parse(HttpContext.Request.Form["OrderID"]);
-            DataTable listOrderUnit = orderBUS.GetOrderUnit(orderID);
+            DataTable listOrderUnit;
+            bool result = CheckSession();
+            // Check SignIn
+            if (!result)
+            {
+                return RedirectToAction("SignIn");
+            } else
+            {
+                int orderID = int.Parse(HttpContext.Request.Form["OrderID"]);
+                listOrderUnit = orderBUS.GetOrderUnit(orderID);
+            }
             return View(listOrderUnit);
         }
     }
