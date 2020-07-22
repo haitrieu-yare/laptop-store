@@ -8,7 +8,30 @@ namespace DAL
 {
     public class UserDAL : DBConnect
     {
-        // Check UserID
+        public bool CheckAccountExist(string email)
+        {
+            bool result = true;
+            String SQL = "Select Top 1 UserEmail From tblUser Where UserEmail=@Email";
+            try
+            {
+                if (_conn.State == ConnectionState.Closed)
+                {
+                    _conn.Open();
+                }
+                SqlCommand cmd = new SqlCommand(SQL, _conn);
+                cmd.Parameters.Add("@Email", SqlDbType.VarChar).Value = email;
+                result = cmd.ExecuteScalar() != null;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                _conn.Close();
+            }
+            return result;
+        }
         public int CheckUserCount()
         {
             int count = 0;

@@ -9,6 +9,10 @@ namespace BUS
     public class UserBUS
     {
         private readonly UserDAL userDAL = new UserDAL();
+        public bool CheckAccountExist(string email)
+        {
+            return userDAL.CheckAccountExist(email);
+        }
         public DataTable SignIn(string email, string password)
         {
             Byte[] salt = GetPasswordSalt(email);

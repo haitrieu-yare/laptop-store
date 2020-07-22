@@ -162,30 +162,38 @@ namespace laptop_store.Controllers
             {
                 string email = HttpContext.Request.Form["Email"];
                 string password = HttpContext.Request.Form["Password"];
-                DataTable userDetail = userBUS.SignIn(email, password);
-                #region CheckNullAddressAndPhone
-                if (userDetail.Rows[0]["UserAddress"].GetType().ToString().Contains("DBNull"))
+                bool ifAccountIsExist = userBUS.CheckAccountExist(email);
+                if (ifAccountIsExist)
                 {
-                    HttpContext.Session.SetString("CurrentUserAddress", "No Information");
+                    DataTable userDetail = userBUS.SignIn(email, password);
+                    #region CheckNullAddressAndPhone
+                    if (userDetail.Rows[0]["UserAddress"].GetType().ToString().Contains("DBNull"))
+                    {
+                        HttpContext.Session.SetString("CurrentUserAddress", "No Information");
+                    }
+                    else
+                    {
+                        HttpContext.Session.SetString("CurrentUserAddress", (string)userDetail.Rows[0]["UserAddress"]);
+                    }
+                    if (userDetail.Rows[0]["UserPhone"].GetType().ToString().Contains("DBNull"))
+                    {
+                        HttpContext.Session.SetString("CurrentUserPhone", "No Information");
+                    }
+                    else
+                    {
+                        HttpContext.Session.SetString("CurrentUserPhone", (string)userDetail.Rows[0]["UserPhone"]);
+                    }
+                    #endregion CheckNullAddressAndPhone
+                    HttpContext.Session.SetString("CurrentUserEmail", email);
+                    HttpContext.Session.SetString("CurrentUserName", (string)userDetail.Rows[0]["UserName"]);
                 } else
                 {
-                    HttpContext.Session.SetString("CurrentUserAddress", (string)userDetail.Rows[0]["UserAddress"]);
+                    return View("SignIn", "This account does not exist");
                 }
-                if (userDetail.Rows[0]["UserPhone"].GetType().ToString().Contains("DBNull"))
-                {
-                    HttpContext.Session.SetString("CurrentUserPhone", "No Information");
-                } else
-                {
-                    HttpContext.Session.SetString("CurrentUserPhone", (string)userDetail.Rows[0]["UserPhone"]);
-                }
-                #endregion CheckNullAddressAndPhone
-                HttpContext.Session.SetString("CurrentUserEmail", email);
-                HttpContext.Session.SetString("CurrentUserName", (string)userDetail.Rows[0]["UserName"]);
             }
             catch (IndexOutOfRangeException) //Check Sai Email & Password
             {
-                string error = "Wrong email or password";
-                return View("SignIn", error);
+                return View("SignIn", "Wrong email or password");
             } catch (Exception ex)
             {
                 throw ex;
