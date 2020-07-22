@@ -216,7 +216,7 @@ namespace laptop_store.Controllers
                 string userAddress = HttpContext.Request.Form["UserAddress"];
                 string userPhone = HttpContext.Request.Form["UserPhone"];
                 Regex regex = new Regex(@"^0[0-9]{9}$");
-                if (!regex.IsMatch(userPhone))
+                if (userPhone.Length > 0 && !regex.IsMatch(userPhone))
                 {
                     HttpContext.Session.SetString("EnterInformartion", "Phone must be number with 10 digits, starting with 0");
                     return RedirectToAction("Profile");
