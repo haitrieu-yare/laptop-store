@@ -44,6 +44,10 @@
                 <a href="/Home" class="navbar-brand">
                     <strong>Sky Store</strong>
                 </a>
+                <!-- Search form -->
+                <form method="post" asp-controller="Home" asp-action="Search">
+                    <input class="form-control" type="text" name="SearchString" placeholder="Search" aria-label="Search">
+                </form>
                 <div class="navbar-nav d-flex flex-row ml-auto">
                     @if (string.IsNullOrEmpty((string)ViewData["CurrentUserName"]))
                     {

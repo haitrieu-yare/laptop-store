@@ -35,7 +35,8 @@ namespace DAL
         public DataTable GetLaptopDetail(int laptopID)
         {
             DataTable laptopDetail = new DataTable();
-            string SQL = "Select LaptopCPU, LaptopGPU, LaptopRAM, LaptopStorage, LaptopDisplay From tblLaptop Where LaptopID=@ID";
+            string SQL = "Select LaptopCPU, LaptopName, LaptopPrice, LaptopDiscountPercentage, LaptopImage, " +
+                        "LaptopGPU, LaptopRAM, LaptopStorage, LaptopDisplay From tblLaptop Where LaptopID=@ID";
             try
             {
                 SqlCommand cmd = new SqlCommand(SQL, _conn);
@@ -136,6 +137,31 @@ namespace DAL
                 _conn.Close();
             }
             return laptopName;
+        }
+        public DataTable SearchLaptopName(string search)
+        {
+            DataTable listSearchLaptop = new DataTable();
+            string SQL = "Select LaptopID, LaptopName, LaptopPrice From tblLaptop Where LaptopName Like '%' + @LaptopName + '%'";
+            try
+            {
+                if (_conn.State == ConnectionState.Closed)
+                {
+                    _conn.Open();
+                }
+                SqlCommand cmd = new SqlCommand(SQL, _conn);
+                cmd.Parameters.Add("@LaptopName", SqlDbType.VarChar).Value = search; //"%" + search + "%"
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                adapter.Fill(listSearchLaptop);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                _conn.Close();
+            }
+            return listSearchLaptop;
         }
     } // End Class
 } // End Namespace

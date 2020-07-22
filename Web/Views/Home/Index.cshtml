@@ -14,14 +14,14 @@
                                    onclick="chosenLaptop(@Model.Rows[i]["LaptopID"], '@Model.Rows[i]["LaptopPrice"]', '@Model.Rows[i]["LaptopName"]',
                                                         '@Model.Rows[i]["LaptopDiscountPercentage"]', '@Model.Rows[i]["LaptopImage"]')"
                                    src="@Model.Rows[i]["LaptopImage"]" alt="@Model.Rows[i]["LaptopName"]" />
-                            @if ((double)@Model.Rows[i]["LaptopDiscountPercentage"] != 0)
+                            @if ((float)@Model.Rows[i]["LaptopDiscountPercentage"] != 0)
                             {
                                 <p class="discount-badge">-@Model.Rows[i]["LaptopDiscountPercentage"]%</p>
                             }
                         </div>
                         <div class="card-body">
                             @{
-                                double price = Math.Round((double)Model.Rows[i]["LaptopPrice"] * ((100 - (double)Model.Rows[i]["LaptopDiscountPercentage"]) / 100));
+                                double price = Math.Round((double)Model.Rows[i]["LaptopPrice"] * ((100 - (float)Model.Rows[i]["LaptopDiscountPercentage"]) / 100));
                                 string priceString = price.ToString();
                                 for (int j = priceString.Length-3; j > 0; j-=3)
                                 {

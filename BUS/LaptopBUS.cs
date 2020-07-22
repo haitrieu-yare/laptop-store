@@ -28,5 +28,9 @@ namespace BUS
         {
             return laptopDAL.GetLaptopName(laptopID);
         }
+        public DataTable SearchLaptopName(string search)
+        {
+            return laptopDAL.SearchLaptopName(search);
+        }
     }
 }

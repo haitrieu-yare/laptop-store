@@ -27,6 +27,13 @@ namespace laptop_store.Controllers
             }
             return result;
         }
+        [HttpPost]
+        public IActionResult Search()
+        {
+            string search = HttpContext.Request.Form["SearchString"];
+            DataTable listSearchLaptop = laptopBUS.SearchLaptopName(search);
+            return View(listSearchLaptop);
+        }
         public IActionResult Index()
         {
             DataTable laptopPreviewInfo = laptopBUS.GetLaptopPreviewInfo();
@@ -82,21 +89,21 @@ namespace laptop_store.Controllers
                 requiredLaptop = new Laptop()
                 {
                     LaptopID = laptopID,
-                    LaptopName = HttpContext.Request.Form["laptopName"],
+                    LaptopName = (string)laptopDetailTable.Rows[0]["LaptopName"],
                     LaptopCPU = (string)laptopDetailTable.Rows[0]["LaptopCPU"],
                     LaptopGPU = (string)laptopDetailTable.Rows[0]["LaptopGPU"],
                     LaptopRAM = (string)laptopDetailTable.Rows[0]["LaptopRAM"],
                     LaptopStorage = (string)laptopDetailTable.Rows[0]["LaptopStorage"],
                     LaptopDisplay = (string)laptopDetailTable.Rows[0]["LaptopDisplay"],
-                    LaptopPrice = double.Parse(HttpContext.Request.Form["laptopPrice"]),
                     LaptopQuantity = laptopQuantity,
-                    LaptopImage = HttpContext.Request.Form["laptopImage"],
-                    LaptopDiscountPercentage = float.Parse(HttpContext.Request.Form["laptopDiscountPercentage"])
+                    LaptopImage = (string)laptopDetailTable.Rows[0]["LaptopImage"],
+                    LaptopPrice = (double)laptopDetailTable.Rows[0]["LaptopPrice"],
+                    LaptopDiscountPercentage = (float)laptopDetailTable.Rows[0]["LaptopDiscountPercentage"]
                 };
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception(ex.Message);
             }
             return View(requiredLaptop);
         }
