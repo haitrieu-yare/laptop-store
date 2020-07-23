@@ -376,6 +376,7 @@ namespace laptop_store.Controllers
                     List<Laptop> listLaptopInCart = jsonUtility.GetObjectFromJson<Laptop>(jsonString);
                     // Create Order
                     int currentOrderID = orderBUS.GetOrderID();
+                    HttpContext.Session.SetString("OrderCount", currentOrderID.ToString());
                     DataTable newOrder = new DataTable();
                     newOrder.Columns.Add("OrderID");
                     newOrder.Columns.Add("UserEmail");
