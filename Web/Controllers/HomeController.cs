@@ -30,6 +30,7 @@ namespace laptop_store.Controllers
         [HttpPost]
         public IActionResult Search()
         {
+            CheckSession();
             string search = HttpContext.Request.Form["SearchString"];
             DataTable listSearchLaptop = laptopBUS.SearchLaptopName(search);
             return View(listSearchLaptop);
