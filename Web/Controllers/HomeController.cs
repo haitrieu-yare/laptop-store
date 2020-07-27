@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using BUS;
-using laptop_store.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.RegularExpressions;
+using laptop_store.Models;
+using BUS;
 
 namespace laptop_store.Controllers
 {
@@ -52,6 +52,7 @@ namespace laptop_store.Controllers
                 bool checkSignIn = CheckSession();
                 if (!checkSignIn)
                 {
+                    // Use this to modify Add To Cart button (if hasn't signin -> redirect to signin page)
                     ViewData["checkSignIn"] = "Haven't sign in";
                 }
                 else 

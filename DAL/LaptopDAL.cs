@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Text;
 
 namespace DAL
 {
@@ -85,6 +83,7 @@ namespace DAL
             }
             return laptopQuantity;
         }
+        // Update LaptopQuantity
         public bool UpdateLaptopQuantity(int laptopID, int laptopNewQuantity)
         {
             bool result = true;
@@ -138,6 +137,7 @@ namespace DAL
             }
             return laptopName;
         }
+        // Search Laptop by Name
         public DataTable SearchLaptopName(string search)
         {
             DataTable listSearchLaptop = new DataTable();

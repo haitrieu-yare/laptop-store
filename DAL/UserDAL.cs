@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Text;
 
 namespace DAL
 {
@@ -58,7 +56,6 @@ namespace DAL
             }
             return count;
         }
-        // Get PasswordSalt
         public Byte[] GetPasswordSalt(string email)
         {
             Byte[] salt = null;
@@ -87,7 +84,6 @@ namespace DAL
             }
             return salt;
         }
-        // Sign In
         public DataTable SignIn(string email, string password)
         {
             DataTable userDetail = new DataTable();
@@ -114,7 +110,6 @@ namespace DAL
             }
             return userDetail;
         }
-        // Sign Up
         public bool SignUp(string email, string password, byte[] salt)
         {
             bool result = false;

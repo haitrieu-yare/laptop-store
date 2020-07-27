@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace laptop_store.Models
+﻿namespace laptop_store.Models
 {
     public class User
     {

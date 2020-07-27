@@ -1,21 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace BUS
 {
     public class JsonUtility
     {
-        public List<T> GetObjectFromJson<T>(string jasonString)
+        public List<T> GetObjectFromJson<T>(string jsonString)
         {
-            List<T> listLaptopInCart = JsonConvert.DeserializeObject<List<T>>(jasonString);
+            List<T> listLaptopInCart = JsonConvert.DeserializeObject<List<T>>(jsonString);
             return listLaptopInCart;
         }
         public string SetObjectAsJson<T>(List<T> listObject)
         {
-            string jasonString = JsonConvert.SerializeObject(listObject);
-            return jasonString;
+            string jsonString = JsonConvert.SerializeObject(listObject);
+            return jsonString;
         }
     }
 }
