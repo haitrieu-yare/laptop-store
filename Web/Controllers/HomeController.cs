@@ -1,4 +1,6 @@
-﻿using System;
+﻿using System.Text;
+using System.ComponentModel.DataAnnotations;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -20,10 +22,10 @@ namespace laptop_store.Controllers
         private bool CheckSession()
         {
             bool result = false;
-            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("CurrentUserName")))
+            byte[] currentUserName = new byte[50];
+            if (result = HttpContext.Session.TryGetValue("CurrentUserName", out currentUserName))
             {
-                ViewData["CurrentUserName"] = HttpContext.Session.GetString("CurrentUserName");
-                result = true;
+                ViewData["CurrentUserName"] = Encoding.UTF8.GetString(currentUserName);
             }
             return result;
         }

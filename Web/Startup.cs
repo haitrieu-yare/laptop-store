@@ -12,7 +12,9 @@ namespace laptop_store
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc(); // Allow program to use MVC
+            // Allow program to use MVC
+            services.AddMvc(); 
+            // Allow program to use Session
             services.AddSession(options => {
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
             });
@@ -25,12 +27,14 @@ namespace laptop_store
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseStaticFiles(); // Allows program to use static files (html, css, js...)
+            // Allows program to use static files (html, css, js...)
+            app.UseStaticFiles(); 
             app.UseSession();
             app.UseRouting();
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapDefaultControllerRoute(); // Default routing
+                // Default routing
+                endpoints.MapDefaultControllerRoute(); 
             });
         }
     }
