@@ -4,8 +4,15 @@ using System.Data.SqlClient;
 
 namespace DAL
 {
-    public class UserDAL : DBConnect
+    public class UserDAL
     {
+        SqlConnection _conn;
+        private readonly string _connectionString;
+        public UserDAL(string connectionString)
+        {
+            _connectionString = connectionString;
+            _conn = new SqlConnection(connectionString);
+        }
         public bool CheckAccountExist(string email)
         {
             bool result = true;
@@ -44,13 +51,14 @@ namespace DAL
                 SqlDataReader reader = cmd.ExecuteReader();
                 if (reader.Read())
                 {
-                    count = (int)reader["UserEmail"];
+                    count = (int) reader["UserEmail"];
                 }
             }
             catch (Exception ex)
             {
                 throw ex;
-            } finally
+            }
+            finally
             {
                 _conn.Close();
             }
@@ -71,7 +79,7 @@ namespace DAL
                 SqlDataReader reader = cmd.ExecuteReader();
                 if (reader.Read())
                 {
-                    salt = (byte[])reader["UserPasswordSalt"];
+                    salt = (byte[]) reader["UserPasswordSalt"];
                 }
             }
             catch (Exception ex)
@@ -132,7 +140,8 @@ namespace DAL
             catch (Exception ex)
             {
                 throw ex;
-            } finally
+            }
+            finally
             {
                 _conn.Close();
             }
@@ -158,7 +167,8 @@ namespace DAL
             catch (Exception ex)
             {
                 throw ex;
-            } finally
+            }
+            finally
             {
                 _conn.Close();
             }

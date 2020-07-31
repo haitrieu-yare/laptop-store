@@ -1,11 +1,15 @@
-﻿using DAL;
-using System.Data;
+﻿using System.Data;
+using DAL;
 
 namespace BUS
 {
     public class LaptopBUS
     {
-        private readonly LaptopDAL laptopDAL = new LaptopDAL();
+        private readonly LaptopDAL laptopDAL;
+        public LaptopBUS(string connectionString)
+        {
+            laptopDAL = new LaptopDAL(connectionString);
+        }
         public DataTable GetLaptopPreviewInfo()
         {
             return laptopDAL.GetLaptopPreviewInfo();

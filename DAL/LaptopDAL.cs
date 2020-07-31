@@ -4,9 +4,15 @@ using System.Data.SqlClient;
 
 namespace DAL
 {
-    public class LaptopDAL : DBConnect
+    public class LaptopDAL
     {
-        // Get Laptop Preview Info
+        SqlConnection _conn;
+        private readonly string _connectionString;
+        public LaptopDAL(string connectionString)
+        {
+            _connectionString = connectionString;
+            _conn = new SqlConnection(connectionString);
+        }
         public DataTable GetLaptopPreviewInfo()
         {
             DataTable previewInfo = new DataTable();
@@ -23,7 +29,8 @@ namespace DAL
             catch (Exception ex)
             {
                 throw ex;
-            } finally
+            }
+            finally
             {
                 _conn.Close();
             }
@@ -34,7 +41,7 @@ namespace DAL
         {
             DataTable laptopDetail = new DataTable();
             string SQL = "Select LaptopCPU, LaptopName, LaptopPrice, LaptopDiscountPercentage, LaptopImage, " +
-                        "LaptopGPU, LaptopRAM, LaptopStorage, LaptopDisplay From tblLaptop Where LaptopID=@ID";
+                "LaptopGPU, LaptopRAM, LaptopStorage, LaptopDisplay From tblLaptop Where LaptopID=@ID";
             try
             {
                 SqlCommand cmd = new SqlCommand(SQL, _conn);
@@ -49,7 +56,8 @@ namespace DAL
             catch (Exception ex)
             {
                 throw ex;
-            } finally
+            }
+            finally
             {
                 _conn.Close();
             }
@@ -71,13 +79,14 @@ namespace DAL
                 SqlDataReader reader = cmd.ExecuteReader();
                 if (reader.Read())
                 {
-                    laptopQuantity = (int)reader["LaptopQuantity"];
+                    laptopQuantity = (int) reader["LaptopQuantity"];
                 }
             }
             catch (Exception ex)
             {
                 throw ex;
-            } finally
+            }
+            finally
             {
                 _conn.Close();
             }
@@ -95,14 +104,15 @@ namespace DAL
                     _conn.Open();
                 }
                 SqlCommand cmd = new SqlCommand(SQL, _conn);
-                cmd.Parameters.Add("@LaptopNewQuantity",SqlDbType.Int).Value = laptopNewQuantity;
+                cmd.Parameters.Add("@LaptopNewQuantity", SqlDbType.Int).Value = laptopNewQuantity;
                 cmd.Parameters.Add("@LaptopID", SqlDbType.Int).Value = laptopID;
                 result = cmd.ExecuteNonQuery() > 0;
             }
             catch (Exception ex)
             {
                 throw ex;
-            } finally
+            }
+            finally
             {
                 _conn.Close();
             }
@@ -124,7 +134,7 @@ namespace DAL
                 SqlDataReader reader = cmd.ExecuteReader();
                 if (reader.Read())
                 {
-                    laptopName = (string)reader["LaptopName"];
+                    laptopName = (string) reader["LaptopName"];
                 }
             }
             catch (Exception ex)

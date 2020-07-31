@@ -1,14 +1,18 @@
-﻿using DAL;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using System;
+﻿using System;
 using System.Data;
 using System.Security.Cryptography;
+using DAL;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
 namespace BUS
 {
     public class UserBUS
     {
-        private readonly UserDAL userDAL = new UserDAL();
+        readonly UserDAL userDAL;
+        public UserBUS(string connectionString)
+        {
+            userDAL = new UserDAL(connectionString);
+        }
         public bool CheckAccountExist(string email)
         {
             return userDAL.CheckAccountExist(email);
@@ -37,7 +41,7 @@ namespace BUS
         {
             // generate a 128-bit salt using a secure PRNG
             byte[] salt = new byte[128 / 8];
-            using (var rng = RandomNumberGenerator.Create())
+            using(var rng = RandomNumberGenerator.Create())
             {
                 rng.GetBytes(salt);
             }

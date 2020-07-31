@@ -4,8 +4,15 @@ using System.Data.SqlClient;
 
 namespace DAL
 {
-    public class OrderDAL : DBConnect
+    public class OrderDAL
     {
+        private readonly string _connectionString;
+        SqlConnection _conn;
+        public OrderDAL(string connectionString)
+        {
+            _connectionString = connectionString;
+            _conn = new SqlConnection(connectionString);
+        }
         public int GetOrderID()
         {
             int orderID = 0;
@@ -20,13 +27,14 @@ namespace DAL
                 SqlDataReader reader = cmd.ExecuteReader();
                 if (reader.Read())
                 {
-                    orderID = (int)reader["OrderID"];
+                    orderID = (int) reader["OrderID"];
                 }
             }
             catch (Exception ex)
             {
                 throw ex;
-            } finally
+            }
+            finally
             {
                 _conn.Close();
             }
@@ -46,7 +54,7 @@ namespace DAL
                 SqlDataReader reader = cmd.ExecuteReader();
                 if (reader.Read())
                 {
-                    orderUnitID = (int)reader["OrderUnitID"];
+                    orderUnitID = (int) reader["OrderUnitID"];
                 }
             }
             catch (Exception ex)
@@ -78,7 +86,9 @@ namespace DAL
             catch (Exception ex)
             {
                 throw ex;
-            } finally {
+            }
+            finally
+            {
                 _conn.Close();
             }
             return result;
@@ -101,11 +111,12 @@ namespace DAL
                     cmd.Parameters.Add("@LaptopID", SqlDbType.Int).Value = newOrderUnit.Rows[i]["LaptopID"];
                     cmd.Parameters.Add("@Quantity", SqlDbType.Int).Value = newOrderUnit.Rows[i]["Quantity"];
                     cmd.Parameters.Add("@Price", SqlDbType.Float).Value = newOrderUnit.Rows[i]["Price"];
-                    result = cmd.ExecuteNonQuery() > 0; 
+                    result = cmd.ExecuteNonQuery() > 0;
                     if (!result)
                     {
                         break;
-                    } else
+                    }
+                    else
                     {
                         cmd.Parameters.Clear();
                     }
@@ -114,7 +125,8 @@ namespace DAL
             catch (Exception ex)
             {
                 throw ex;
-            } finally
+            }
+            finally
             {
                 _conn.Close();
             }
@@ -140,7 +152,8 @@ namespace DAL
             catch (Exception ex)
             {
                 throw ex;
-            } finally
+            }
+            finally
             {
                 _conn.Close();
             }
@@ -160,19 +173,19 @@ namespace DAL
                 cmd.Parameters.Add("@OrderID", SqlDbType.Int).Value = orderID;
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                 adapter.Fill(orderUnitList);
-                // Get Laptop Name
-                LaptopDAL laptopDAL = new LaptopDAL();
+                LaptopDAL laptopDAL = new LaptopDAL(_connectionString);
                 orderUnitList.Columns.Add("LaptopName");
                 for (int i = 0; i < orderUnitList.Rows.Count; i++)
                 {
-                    orderUnitList.Rows[i]["LaptopName"] = laptopDAL.GetLaptopName((int)orderUnitList.Rows[i]["LaptopID"]);
+                    orderUnitList.Rows[i]["LaptopName"] = laptopDAL.GetLaptopName((int) orderUnitList.Rows[i]["LaptopID"]);
                 }
                 orderUnitList.Columns.Remove("LaptopID");
             }
             catch (Exception ex)
             {
                 throw ex;
-            } finally
+            }
+            finally
             {
                 _conn.Close();
             }

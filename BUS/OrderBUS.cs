@@ -1,11 +1,15 @@
-﻿using DAL;
-using System.Data;
+﻿using System.Data;
+using DAL;
 
 namespace BUS
 {
     public class OrderBUS
     {
-        readonly OrderDAL orderDAL = new OrderDAL();
+        readonly OrderDAL orderDAL;
+        public OrderBUS(string connectionString)
+        {
+            orderDAL = new OrderDAL(connectionString);
+        }
         public int GetOrderID()
         {
             return orderDAL.GetOrderID();

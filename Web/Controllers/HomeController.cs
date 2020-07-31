@@ -1,24 +1,33 @@
-﻿using System.Text;
-using System.ComponentModel.DataAnnotations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using BUS;
+using laptop_store.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.RegularExpressions;
-using laptop_store.Models;
-using BUS;
+using Microsoft.Extensions.Configuration;
 
 namespace laptop_store.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly LaptopBUS laptopBUS = new LaptopBUS();
-        private readonly UserBUS userBUS = new UserBUS();
-        private readonly OrderBUS orderBUS = new OrderBUS();
-        private readonly JsonUtility jsonUtility = new JsonUtility();
+        private readonly string _connectionString;
+        private readonly LaptopBUS laptopBUS;
+        private readonly UserBUS userBUS;
+        private readonly OrderBUS orderBUS;
+        private readonly JsonUtility jsonUtility;
+        public HomeController(IConfiguration config)
+        {
+            _connectionString = config.GetConnectionString("DefaultConnectionString");
+            laptopBUS = new LaptopBUS(_connectionString);
+            userBUS = new UserBUS(_connectionString);
+            orderBUS = new OrderBUS(_connectionString);
+            jsonUtility = new JsonUtility();
+        }
         private bool CheckSession()
         {
             bool result = false;
@@ -29,6 +38,7 @@ namespace laptop_store.Controllers
             }
             return result;
         }
+
         [HttpPost]
         public IActionResult Search()
         {
@@ -43,6 +53,7 @@ namespace laptop_store.Controllers
             CheckSession();
             return View(laptopPreviewInfo);
         }
+
         [HttpPost]
         public IActionResult Detail()
         {
@@ -57,7 +68,7 @@ namespace laptop_store.Controllers
                     // Use this to modify Add To Cart button (if hasn't signin -> redirect to signin page)
                     ViewData["checkSignIn"] = "Haven't sign in";
                 }
-                else 
+                else
                 {
                     // Check session
                     if (HttpContext.Session.Keys.Contains("cart"))
@@ -93,16 +104,16 @@ namespace laptop_store.Controllers
                 requiredLaptop = new Laptop()
                 {
                     LaptopID = laptopID,
-                    LaptopName = (string)laptopDetailTable.Rows[0]["LaptopName"],
-                    LaptopCPU = (string)laptopDetailTable.Rows[0]["LaptopCPU"],
-                    LaptopGPU = (string)laptopDetailTable.Rows[0]["LaptopGPU"],
-                    LaptopRAM = (string)laptopDetailTable.Rows[0]["LaptopRAM"],
-                    LaptopStorage = (string)laptopDetailTable.Rows[0]["LaptopStorage"],
-                    LaptopDisplay = (string)laptopDetailTable.Rows[0]["LaptopDisplay"],
+                    LaptopName = (string) laptopDetailTable.Rows[0]["LaptopName"],
+                    LaptopCPU = (string) laptopDetailTable.Rows[0]["LaptopCPU"],
+                    LaptopGPU = (string) laptopDetailTable.Rows[0]["LaptopGPU"],
+                    LaptopRAM = (string) laptopDetailTable.Rows[0]["LaptopRAM"],
+                    LaptopStorage = (string) laptopDetailTable.Rows[0]["LaptopStorage"],
+                    LaptopDisplay = (string) laptopDetailTable.Rows[0]["LaptopDisplay"],
                     LaptopQuantity = laptopQuantity,
-                    LaptopImage = (string)laptopDetailTable.Rows[0]["LaptopImage"],
-                    LaptopPrice = (double)laptopDetailTable.Rows[0]["LaptopPrice"],
-                    LaptopDiscountPercentage = (float)laptopDetailTable.Rows[0]["LaptopDiscountPercentage"]
+                    LaptopImage = (string) laptopDetailTable.Rows[0]["LaptopImage"],
+                    LaptopPrice = (double) laptopDetailTable.Rows[0]["LaptopPrice"],
+                    LaptopDiscountPercentage = (float) laptopDetailTable.Rows[0]["LaptopDiscountPercentage"]
                 };
             }
             catch (Exception ex)
@@ -115,6 +126,7 @@ namespace laptop_store.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public IActionResult DoSignUp()
         {
@@ -138,12 +150,13 @@ namespace laptop_store.Controllers
                     string notification = "This Email has been used, please choose another Email";
                     return View("SignUp", notification);
                 }
-                
+
                 if (result)
                 {
                     string notification = "Sign Up Successful";
                     return View("SignUp", notification);
-                } else
+                }
+                else
                 {
                     string notification = "Sign Up Fail";
                     return View("SignUp", notification);
@@ -159,6 +172,7 @@ namespace laptop_store.Controllers
             }
             return View();
         }
+
         [HttpPost]
         public IActionResult SignOut()
         {
@@ -166,6 +180,7 @@ namespace laptop_store.Controllers
             ViewData.Clear();
             return RedirectToAction("Index");
         }
+
         [HttpPost]
         public IActionResult CheckSignIn()
         {
@@ -184,7 +199,7 @@ namespace laptop_store.Controllers
                     }
                     else
                     {
-                        HttpContext.Session.SetString("CurrentUserAddress", (string)userDetail.Rows[0]["UserAddress"]);
+                        HttpContext.Session.SetString("CurrentUserAddress", (string) userDetail.Rows[0]["UserAddress"]);
                     }
                     if (userDetail.Rows[0]["UserPhone"].GetType().ToString().Contains("DBNull"))
                     {
@@ -192,12 +207,13 @@ namespace laptop_store.Controllers
                     }
                     else
                     {
-                        HttpContext.Session.SetString("CurrentUserPhone", (string)userDetail.Rows[0]["UserPhone"]);
+                        HttpContext.Session.SetString("CurrentUserPhone", (string) userDetail.Rows[0]["UserPhone"]);
                     }
                     #endregion CheckNullAddressAndPhone
                     HttpContext.Session.SetString("CurrentUserEmail", email);
-                    HttpContext.Session.SetString("CurrentUserName", (string)userDetail.Rows[0]["UserName"]);
-                } else
+                    HttpContext.Session.SetString("CurrentUserName", (string) userDetail.Rows[0]["UserName"]);
+                }
+                else
                 {
                     return View("SignIn", "This account does not exist");
                 }
@@ -205,7 +221,8 @@ namespace laptop_store.Controllers
             catch (IndexOutOfRangeException) //Check Sai Email & Password
             {
                 return View("SignIn", "Wrong email or password");
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -232,6 +249,7 @@ namespace laptop_store.Controllers
             }
             return View(user);
         }
+
         [HttpPost]
         public IActionResult ChangeProfile()
         {
@@ -254,7 +272,8 @@ namespace laptop_store.Controllers
                     HttpContext.Session.SetString("CurrentUserName", userName);
                     HttpContext.Session.SetString("CurrentUserAddress", userAddress);
                     HttpContext.Session.SetString("CurrentUserPhone", userPhone);
-                } else
+                }
+                else
                 {
                     HttpContext.Session.SetString("EnterInformartion", "Update Fail");
                 }
@@ -273,7 +292,8 @@ namespace laptop_store.Controllers
             if (!result)
             {
                 return RedirectToAction("SignIn");
-            } else
+            }
+            else
             {
                 if (HttpContext.Session.Keys.Contains("cart"))
                 {
@@ -287,7 +307,8 @@ namespace laptop_store.Controllers
             }
             return View(listLaptopInCart);
         }
-        [HttpPost] 
+
+        [HttpPost]
         public IActionResult AddToCart()
         {
             int laptopID = int.Parse(HttpContext.Request.Form["LaptopID"]);
@@ -308,7 +329,7 @@ namespace laptop_store.Controllers
                     for (int i = 0; i < listLaptopInCart.Count; i++)
                     {
                         if (laptopID == listLaptopInCart[i].LaptopID)
-                        {                            
+                        {
                             listLaptopInCart[i].LaptopOrderQuantity++;
                             checkExist = true;
                         }
@@ -320,16 +341,17 @@ namespace laptop_store.Controllers
                         {
                             ViewData["Quantity"] = "Can not add more than 7 items to cart";
                             return RedirectToAction("Detail");
-                        } else
+                        }
+                        else
                         {
                             listLaptopInCart.Add(new Laptop()
                             {
                                 LaptopID = laptopID,
-                                LaptopName = laptopName,
-                                LaptopPrice = laptopPrice,
-                                LaptopQuantity = laptopQuantity,
-                                LaptopDiscountPercentage = laptopDiscountPercentage,
-                                LaptopOrderQuantity = 1
+                                    LaptopName = laptopName,
+                                    LaptopPrice = laptopPrice,
+                                    LaptopQuantity = laptopQuantity,
+                                    LaptopDiscountPercentage = laptopDiscountPercentage,
+                                    LaptopOrderQuantity = 1
                             });
                         }
                     }
@@ -343,11 +365,11 @@ namespace laptop_store.Controllers
                     listLaptopInCart.Add(new Laptop()
                     {
                         LaptopID = laptopID,
-                        LaptopName = laptopName,
-                        LaptopPrice = laptopPrice,
-                        LaptopQuantity = laptopQuantity,
-                        LaptopDiscountPercentage = laptopDiscountPercentage,
-                        LaptopOrderQuantity = 1
+                            LaptopName = laptopName,
+                            LaptopPrice = laptopPrice,
+                            LaptopQuantity = laptopQuantity,
+                            LaptopDiscountPercentage = laptopDiscountPercentage,
+                            LaptopOrderQuantity = 1
                     });
                     string jsonString = jsonUtility.SetObjectAsJson<Laptop>(listLaptopInCart);
                     HttpContext.Session.SetString("cart", jsonString);
@@ -359,16 +381,18 @@ namespace laptop_store.Controllers
             }
             return RedirectToAction("Index");
         }
+
         [HttpPost]
         public IActionResult Order()
         {
             // Check Phone, Adress
-            if (HttpContext.Session.GetString("CurrentUserAddress").Equals("No Information") 
-                || HttpContext.Session.GetString("CurrentUserPhone").Equals("No Information"))
+            if (HttpContext.Session.GetString("CurrentUserAddress").Equals("No Information") ||
+                HttpContext.Session.GetString("CurrentUserPhone").Equals("No Information"))
             {
                 HttpContext.Session.SetString("EnterInformartion", "Please enter your address and phone before order");
                 return RedirectToAction("Profile");
-            } else
+            }
+            else
             {
                 bool result;
                 double totalPrice = double.Parse(HttpContext.Request.Form["totalPrice"]);
@@ -439,7 +463,8 @@ namespace laptop_store.Controllers
             if (!resultSession)
             {
                 return RedirectToAction("SignIn");
-            } else
+            }
+            else
             {
                 if (!string.IsNullOrEmpty(HttpContext.Session.GetString("OrderAddingResult")))
                 {
@@ -451,6 +476,7 @@ namespace laptop_store.Controllers
             }
             return View(listOrder);
         }
+
         [HttpPost]
         public IActionResult OrderDetail()
         {
@@ -460,7 +486,8 @@ namespace laptop_store.Controllers
             if (!result)
             {
                 return RedirectToAction("SignIn");
-            } else
+            }
+            else
             {
                 int orderID = int.Parse(HttpContext.Request.Form["OrderID"]);
                 listOrderUnit = orderBUS.GetOrderUnit(orderID);
