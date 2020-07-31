@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace laptop_store.Models
+﻿namespace laptop_store.Models
 {
     public class Laptop 
     {
@@ -14,7 +12,6 @@ namespace laptop_store.Models
         public double LaptopPrice { get; set; }
         public int LaptopQuantity { get; set; }
         public int LaptopOrderQuantity { get; set; }
-        public DateTime LaptopImportDate { get; set; }
         public float LaptopDiscountPercentage { get; set; }
         public string LaptopImage { get; set; }
     }
